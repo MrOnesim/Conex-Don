@@ -1,13 +1,7 @@
-"use client";
-
-import { Suspense } from "react";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return (
-    <Suspense fallback={<LiveSkeleton />}>
-      <LiveSkeleton />
-    </Suspense>
-  );
+  return <LiveSkeleton />;
 }
 
 function LiveSkeleton() {
@@ -17,7 +11,7 @@ function LiveSkeleton() {
         <Skeleton className="h-8 w-48 mb-12" />
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="border border-bone/12 p-6 lg:p-8 bg-bone/10 rounded-xl">
+            <div key={i} className="border border-bone/12 p-6 lg:p-8">
               <div className="flex flex-wrap gap-3 mb-4">
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-6 w-32" />
@@ -29,11 +23,5 @@ function LiveSkeleton() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Skeleton({ className = "" }: { className?: string }) {
-  return (
-    <div className={`${className} animate-pulse bg-bone/10 rounded`} aria-hidden="true" />
   );
 }

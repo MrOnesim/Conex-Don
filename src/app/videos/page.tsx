@@ -69,7 +69,6 @@ function generateVideoSchema(videos: Awaited<ReturnType<typeof getVideos>>) {
 
 export default async function VideosPage() {
   const videos = await getVideos();
-  const categories = Array.from(new Set(videos.map((video) => video.category)));
 
   const videoSchema = generateVideoSchema(videos);
 
@@ -89,21 +88,7 @@ export default async function VideosPage() {
 
       <section className="bg-ink">
         <div className="mx-auto max-w-[1600px] px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
-          <div className="mb-10 flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <span
-                key={category}
-                className="border border-bone/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-bone/55"
-              >
-                {category}
-              </span>
-            ))}
-            <span className="ml-auto text-[10px] uppercase tracking-[0.2em] text-bone/35">
-              {videos.length} vidéos
-            </span>
-          </div>
-
-          <VideoWall videos={videos} />
+          <VideoWall videos={videos} filterable />
 
           <div className="mt-16">
             <SectionHead

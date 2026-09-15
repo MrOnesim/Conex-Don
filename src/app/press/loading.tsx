@@ -1,13 +1,7 @@
-"use client";
-
-import { Suspense } from "react";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return (
-    <Suspense fallback={<PressSkeleton />}>
-      <PressSkeleton />
-    </Suspense>
-  );
+  return <PressSkeleton />;
 }
 
 function PressSkeleton() {
@@ -17,7 +11,7 @@ function PressSkeleton() {
         <Skeleton className="h-8 w-48 mb-12" />
         <div className="space-y-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="border border-bone/12 p-6 bg-bone/10 rounded-xl">
+            <div key={i} className="border border-bone/12 p-6">
               <Skeleton className="h-6 w-1/3 mb-2" />
               <Skeleton className="h-8 w-full" />
               <Skeleton className="h-4 w-2/3 mt-2" />
@@ -30,11 +24,5 @@ function PressSkeleton() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Skeleton({ className = "" }: { className?: string }) {
-  return (
-    <div className={`${className} animate-pulse bg-bone/10 rounded`} aria-hidden="true" />
   );
 }

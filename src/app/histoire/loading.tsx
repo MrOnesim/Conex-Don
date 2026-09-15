@@ -1,13 +1,7 @@
-"use client";
-
-import { Suspense } from "react";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return (
-    <Suspense fallback={<HistoireSkeleton />}>
-      <HistoireSkeleton />
-    </Suspense>
-  );
+  return <HistoireSkeleton />;
 }
 
 function HistoireSkeleton() {
@@ -36,11 +30,5 @@ function HistoireSkeleton() {
         <Skeleton className="h-48 w-full mt-8" />
       </div>
     </div>
-  );
-}
-
-function Skeleton({ className = "" }: { className?: string }) {
-  return (
-    <div className={`${className} animate-pulse bg-bone/10 rounded`} aria-hidden="true" />
   );
 }

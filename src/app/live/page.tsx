@@ -169,7 +169,7 @@ export default async function LivePage() {
                     accent="#9E382C"
                     sizes="(max-width: 640px) 92vw, 46vw"
                     className="h-full w-full"
-                    imageClassName="object-cover duotone transition-transform duration-[1200ms] group-hover:scale-105"
+                    imageClassName="object-cover duotone transition-all duration-[1200ms] group-hover:scale-105 group-hover:grayscale-0"
                   />
                   <div className="absolute inset-0 bg-ink/35" />
                   <span className="absolute left-4 top-4 bg-ink/85 px-3 py-1.5 text-[9px] uppercase tracking-[0.2em] text-bone/80">
@@ -198,8 +198,8 @@ export default async function LivePage() {
         </div>
       </section>
 
-      <HeritageSection />
-      <BookingCta />
+      <HeritageSection index="02" />
+      <BookingCta index="03" />
     </>
   );
 }

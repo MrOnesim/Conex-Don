@@ -1,13 +1,7 @@
-"use client";
-
-import { Suspense } from "react";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return (
-    <Suspense fallback={<VideosSkeleton />}>
-      <VideosSkeleton />
-    </Suspense>
-  );
+  return <VideosSkeleton />;
 }
 
 function VideosSkeleton() {
@@ -18,7 +12,7 @@ function VideosSkeleton() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="space-y-3 group">
-              <Skeleton className="aspect-video w-full rounded-lg" />
+              <Skeleton className="aspect-video w-full" />
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
             </div>
@@ -27,11 +21,5 @@ function VideosSkeleton() {
         <Skeleton className="h-12 w-48 mt-10 mx-auto" />
       </div>
     </div>
-  );
-}
-
-function Skeleton({ className = "" }: { className?: string }) {
-  return (
-    <div className={`${className} animate-pulse bg-bone/10 rounded`} aria-hidden="true" />
   );
 }

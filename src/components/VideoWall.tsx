@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { OptimizedImage } from "@/components/OptimizedImage";
 import type { VideoView } from "@/lib/data";
@@ -18,13 +18,22 @@ export function VideoWall({
   videos,
   limit,
   columns = "masonry",
+  filterable = false,
 }: {
   videos: VideoView[];
   limit?: number;
   columns?: "masonry" | "grid";
+  filterable?: boolean;
 }) {
-  const list = typeof limit === "number" ? videos.slice(0, limit) : videos;
+  const scoped = typeof limit === "number" ? videos.slice(0, limit) : videos;
   const [active, setActive] = useState<VideoView | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+
+  const categories = useMemo(
+    () => Array.from(new Set(videos.map((video) => video.category))),
+    [videos],
+  );
+  const list = category ? scoped.filter((video) => video.category === category) : scoped;
 
   useEffect(() => {
     document.body.style.overflow = active ? "hidden" : "";
@@ -40,6 +49,43 @@ export function VideoWall({
 
   return (
     <>
+      {filterable ? (
+        <div className="mb-10 flex flex-wrap items-center gap-2 border-y border-bone/12 py-4">
+          <button
+            type="button"
+            onClick={() => setCategory(null)}
+            aria-pressed={category === null}
+            className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] transition-colors duration-300 ${
+              category === null
+                ? "bg-bone text-ink"
+                : "border border-bone/20 text-bone/60 hover:border-gold hover:text-gold"
+            }`}
+          >
+            Tous
+          </button>
+          {categories.map((item) => {
+            const isActive = category === item;
+            return (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setCategory(isActive ? null : item)}
+                aria-pressed={isActive}
+                className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] transition-colors duration-300 ${
+                  isActive
+                    ? "bg-bone text-ink"
+                    : "border border-bone/20 text-bone/60 hover:border-gold hover:text-gold"
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+          <span className="ml-auto text-[10px] uppercase tracking-[0.2em] text-bone/35">
+            {list.length} vidéo{list.length > 1 ? "s" : ""}
+          </span>
+        </div>
+      ) : null}
       <ul
         className={
           columns === "masonry"

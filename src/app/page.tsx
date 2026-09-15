@@ -92,7 +92,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <DuoSection />
+      <DuoSection index="08" />
       <StatsBand />
 
       <section className="relative overflow-hidden border-b border-bone/10 bg-ink">
@@ -100,8 +100,8 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-16">
             <div>
-              <Kicker color="text-gold">ALOBA — la communauté</Kicker>
-              <h2 className="display-xl mt-6 text-[clamp(2rem,18vw,5rem)] leading-[0.82] sm:text-[clamp(1.5rem,16vw,3rem)] lg:text-[clamp(4rem,12rem,6rem)]">
+              <Kicker color="text-gold">09 — La communauté</Kicker>
+              <h2 className="display-xl mt-6 text-[clamp(3rem,16vw,4.5rem)] leading-[0.82] sm:text-[clamp(4rem,10vw,5.5rem)] lg:text-[clamp(4.5rem,8vw,7rem)]">
                 ALOBA
               </h2>
               <RevealWords
@@ -145,8 +145,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LiveBanner events={events} />
-      <NewsGrid posts={news} limit={3} />
+      <LiveBanner events={events} index="10" />
+      <NewsGrid posts={news} limit={3} index="11" />
 
       <section className="border-b border-bone/10 bg-bone text-ink">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-5 py-16 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
@@ -170,7 +170,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <BookingCta />
+      <BookingCta index="12" />
     </>
   );
 }
