@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CookiePreferencesButton } from "@/components/CookiePreferencesButton";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { VelocitySkew } from "@/components/VelocitySkew";
 import { Marquee } from "@/components/ui";
 import { nav, site, socials } from "@/content/site";
 
@@ -9,6 +10,7 @@ export function Footer() {
   return (
     <footer className="relative border-t border-bone/12 bg-ink">
       <div className="border-b border-bone/12 py-4 text-[11px] uppercase tracking-[0.3em] text-bone/40">
+        <VelocitySkew max={1.6}>
         <Marquee
           items={[
             "L'HÉRITAGE EN MOUVEMENT",
@@ -17,6 +19,7 @@ export function Footer() {
           ]}
           slow
         />
+        </VelocitySkew>
       </div>
 
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)_minmax(0,0.7fr)_minmax(0,1fr)] lg:px-12">

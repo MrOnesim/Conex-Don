@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { Reveal } from "@/components/Reveal";
+import { CountUp } from "@/components/CountUp";
+import { Reveal, RevealWords } from "@/components/Reveal";
 import type { StreamLinks } from "@/content/music";
 
 export function Kicker({
@@ -42,7 +43,7 @@ export function SectionHead({
           <span className="eyebrow text-bone/45">{label}</span>
         </div>
         <h2 className="display-xl mt-5 text-[13vw] leading-[0.84] sm:text-6xl lg:text-[4.6rem]">
-          {title}
+          <RevealWords as="span" step={60} text={title} className="block" />
         </h2>
       </div>
       {intro ? (
@@ -172,7 +173,9 @@ export function StreamingLinks({
 export function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="border-l border-bone/15 pl-4">
-      <p className="display-xl text-[clamp(2rem,3vw,3.5rem)] sm:text-[clamp(3rem,4vw,4rem)]">{value}</p>
+      <p className="display-xl text-[clamp(2rem,3vw,3.5rem)] sm:text-[clamp(3rem,4vw,4rem)]">
+        <CountUp value={value} />
+      </p>
       <p className="mt-2 text-[clamp(0.75rem,0.8em,0.875rem)] uppercase tracking-[0.2em] text-bone/45">{label}</p>
     </div>
   );
@@ -214,7 +217,7 @@ export function PageHeader({
       <div className="mx-auto max-w-[1600px] px-5 pb-12 sm:px-8 lg:px-12">
         <Kicker>{eyebrow}</Kicker>
         <h1 className="display-xl mt-5 text-[15vw] leading-[0.8] sm:text-8xl lg:text-[10rem]">
-          {title}
+          <RevealWords as="span" step={70} text={title} className="block" />
         </h1>
         {lead ? (
           <p className="mt-8 max-w-2xl text-[15px] leading-relaxed text-bone/70 sm:text-base">

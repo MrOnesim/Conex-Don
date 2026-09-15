@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Aperçu live Arena : le proxy de preview est servi depuis *.e2b.app
+  allowedDevOrigins: ["**.e2b.app"],
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],

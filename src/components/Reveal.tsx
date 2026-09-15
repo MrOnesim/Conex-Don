@@ -69,14 +69,17 @@ export function RevealWords({
   className = "",
   delay = 0,
   step = 45,
+  as,
 }: {
   text: string;
   className?: string;
   delay?: number;
   step?: number;
+  as?: ElementType;
 }) {
-  const ref = useRef<HTMLParagraphElement | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const Tag = (as ?? "p") as ElementType;
 
   useEffect(() => {
     const node = ref.current;
@@ -97,7 +100,7 @@ export function RevealWords({
   }, []);
 
   return (
-    <p ref={ref} className={className}>
+    <Tag ref={ref} className={className}>
       {text.split(" ").map((word, index) => (
         <span key={`${word}-${index}`} className="inline-block overflow-hidden align-bottom">
           <span
@@ -112,6 +115,6 @@ export function RevealWords({
           {index < text.split(" ").length - 1 ? <span>&nbsp;</span> : null}
         </span>
       ))}
-    </p>
+    </Tag>
   );
 }

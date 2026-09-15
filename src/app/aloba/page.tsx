@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { AlobaWall, type AlobaPost } from "@/components/AlobaSection";
+import { VelocitySkew } from "@/components/VelocitySkew";
 import { Marquee, PageHeader } from "@/components/ui";
 import { socials } from "@/content/site";
 import { getAlobaPosts } from "@/lib/data";
@@ -36,9 +37,11 @@ export default async function AlobaPage() {
       />
 
       <div className="border-b border-bone/12 py-4 text-[11px] uppercase tracking-[0.28em] text-bone/40">
+        <VelocitySkew max={1.6}>
         <Marquee
           items={["#ALOBA", "CONEX & DON", "L'HÉRITAGE EN MOUVEMENT", "DEUX VOIX · UNE HISTOIRE"]}
         />
+        </VelocitySkew>
       </div>
 
       <section className="bg-ink">
