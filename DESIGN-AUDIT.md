@@ -106,7 +106,50 @@ Vérifications : `npm run typecheck` ✓ · `npm run lint` 0 erreur ✓ · `npm 
 
 ---
 
-## 6. Reproduire / vérifier
+## 7. Passe « extraordinaire » (v2) — effets implémentés
+
+Sept effets supplémentaires, tous coupés si `prefers-reduced-motion`, tous sans dépendance :
+
+1. **Cartes empilées épinglées — Héritage Vivant** (`sections.tsx`) : les 4 séquences de la
+   live expérience 2026 deviennent des cartes opaques `position: sticky` décalées
+   (top 104 px + 26 px × n) qui se fichent au sommet et s'empilent pendant le scroll.
+   Barre d'accent cyclée or / argile / forêt / terre, ombre portée vers le haut pour
+   la profondeur. Pur CSS, aucun JS.
+2. **Titre-photographie** (`type-photo`) : le mot **ALOBA** de l'accueil contient la photo
+   de la communauté, recadrée en `background-clip: text` avec un panoramique lent de 26 s
+   (garde `@supports` : repli en couleur pleine si non supporté).
+3. **Filet de progression de lecture** (`ScrollProgress`) : 2 px or → argile fixé sous le bord
+   haut, `scaleX` uniquement (zéro reflow), z-[70] au-dessus du header.
+4. **Compteurs animés** (`CountUp`) : les stats (100 K+, 68,6 K, 6,95 M, 21 787) montent à
+   l'entrée dans le viewport, format français préservé (espaces, virgule, suffixe).
+5. **Inclinaison vélocité des marquees** (`VelocitySkew`) : les bandes défilantes (accueil,
+   footer, musique, aloba) se tordent de ±2° pendant le scroll puis reviennent à plat —
+   effet « tissu entraîné ». Boucle rAF auto-stopée au repos.
+6. **Mur ALOBA en cartes postales** (`AlobaSection` + `.postcard`) : messages légèrement
+   inclinés (−1° → +1,2°), morceau de ruban adhésif en haut, redressement + lévitation au
+   survol avec halo or.
+7. **Respiration Ken Burns du Hero** : la photographie de fond drift très lentement
+   (`.kenburns`), en plus de la parallaxe existante au scroll.
+8. **Titres révélés mot à mot partout** : `SectionHead` et `PageHeader` passent par
+   `RevealWords` (masque par mot, stagger 60-70 ms) — les 15 pages partagent désormais la
+   même entrée en matière éditoriale.
+
+### Et aussi, côté confort de preview
+- `next.config.ts` : `allowedDevOrigins: ["**.e2b.app"]` — le HMR du dev server n'est plus
+  bloqué derrière le proxy de l'aperçu live Arena.
+
+## 8. Idées restantes (si vous voulez pousser encore plus loin)
+
+- **Timeline horizontale épinglée** sur `/histoire` (scroll vertical → translation
+  horizontale des années 2022→2026), via Lenis déjà présent dans les dépendances.
+- **Transition de route « rideau or »** : wipe 400 ms entre deux pages (App Router template).
+- **Disque vinyle** dans l'overlay LISTEN : rainures coniques + rotation quand `playing`.
+- **Waveform réelle** : analyser l'audio via WebAudio n'est pas possible avec l'iframe
+  YouTube ; alternative = formes d'onde pré-calculées par titre (JSON) dessinées en SVG.
+- **Curseur magnétique** sur les CTA du Hero (translation ±6 px suivant la souris).
+- **Mode « papier journal »** du thème clair : fond bone, encre ink, filets or (variables
+  déjà prêtes).
+
 
 ```bash
 npm install

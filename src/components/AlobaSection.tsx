@@ -14,6 +14,9 @@ export type AlobaPost = {
 
 const moods = ["Aloba !", "Mode avion", "Ayato forever", "Héritage vivant", "Trop vrai"];
 
+/** Légères rotations alternées : le mur ressemble à un panneau de cartes postales. */
+const tilts = ["-rotate-1", "rotate-[0.8deg]", "-rotate-[0.6deg]", "rotate-[1.2deg]"];
+
 export function AlobaForm({ onAdded }: { onAdded: (post: AlobaPost) => void }) {
   const [form, setForm] = useState({
     displayName: "",
@@ -170,9 +173,14 @@ export function AlobaWall({ initialPosts }: { initialPosts: AlobaPost[] }) {
           <p className="eyebrow text-bone/40">
             {posts.length} message{posts.length > 1 ? "s" : ""} · #ALOBA
           </p>
-          <ul className="mt-5 columns-1 gap-4 sm:columns-2">
-            {posts.map((post) => (
-              <li key={post.id} className="mb-4 break-inside-avoid border border-bone/12 p-5">
+          <ul className="mt-5 columns-1 gap-4 pt-3 sm:columns-2">
+            {posts.map((post, postIndex) => (
+              <li
+                key={post.id}
+                className={`postcard mb-5 break-inside-avoid border border-bone/12 bg-ink-soft p-5 ${
+                  tilts[postIndex % tilts.length]
+                }`}
+              >
                 <div className="flex items-baseline justify-between gap-3">
                   <p className="text-sm uppercase tracking-[0.1em] text-bone/90">
                     {post.displayName}

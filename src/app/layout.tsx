@@ -7,6 +7,7 @@ import { CursorLabel } from "@/components/CursorLabel";
 import { Footer } from "@/components/Footer";
 import { PlayerDock, PlayerProvider } from "@/components/player";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { awards, site, socials, stats } from "@/content/site";
@@ -133,6 +134,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             Aller au contenu
           </a>
           <SmoothScroll />
+          <ScrollProgress />
           <CursorLabel />
           <script
             type="application/ld+json"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { VelocitySkew } from "@/components/VelocitySkew";
 import { Marquee } from "@/components/ui";
 import { ReleaseGrid } from "@/components/ReleaseGrid";
 import { PageHeader } from "@/components/ui";
@@ -29,11 +30,13 @@ export default async function MusicPage() {
       />
 
       <div className="border-b border-bone/12 py-4 text-[11px] uppercase tracking-[0.28em] text-bone/40">
+        <VelocitySkew max={1.6}>
         <Marquee
           items={releases.map((release) => `${release.title} — ${release.year}`)}
           slow
           reverse
         />
+        </VelocitySkew>
       </div>
 
       <section className="bg-ink">

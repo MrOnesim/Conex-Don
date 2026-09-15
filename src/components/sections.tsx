@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ListenTrigger } from "@/components/ListenRow";
+import { VelocitySkew } from "@/components/VelocitySkew";
 import { Reveal, RevealWords } from "@/components/Reveal";
 import { CTA, Kicker, Marquee, SectionHead, Stat, StreamingLinks } from "@/components/ui";
 import { awards, duo, heritage, site, stats, timeline } from "@/content/site";
@@ -240,6 +241,8 @@ export function ModeAvionRail({
 
 /* -------------------------------------------------------------- heritage */
 
+const sequenceAccents = ["#D6A83A", "#9E382C", "#173F32", "#6F4A32"];
+
 export function HeritageSection({ index = "04" }: { index?: string }) {
   return (
     <section className="relative overflow-hidden border-b border-bone/10 bg-ink">
@@ -291,36 +294,48 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
             </div>
           </div>
 
-          <ol className="divide-y divide-bone/12 border-t border-bone/12">
-            {heritage.sequences.map((sequence, index) => (
-              <Reveal as="li" key={sequence.title} delay={index * 90} variant="wipe">
-                <div className="group flex items-center gap-4 py-6 sm:gap-6">
-                  {sequence.image ? (
-                    <span className="relative hidden aspect-square w-16 shrink-0 overflow-hidden border border-bone/15 sm:block">
-                      <Image
-                        src={sequence.image}
-                        alt=""
-                        fill
-                        sizes="64px"
-                        className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0"
-                      />
-                    </span>
-                  ) : null}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <span className="display-xl text-2xl transition-colors group-hover:text-gold sm:text-4xl">
+          {/* Cartes empilées : chaque séquence se fiche au sommet et attend la suivante */}
+          <ol className="relative space-y-6 lg:space-y-10">
+            {heritage.sequences.map((sequence, position) => (
+              <li
+                key={sequence.title}
+                className="lg:sticky"
+                style={{ top: `${104 + position * 26}px` }}
+              >
+                <Reveal delay={position * 60}>
+                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] sm:gap-7 sm:p-7">
+                    <span
+                      className="absolute inset-y-0 left-0 w-[3px]"
+                      style={{
+                        backgroundColor: sequenceAccents[position % sequenceAccents.length],
+                      }}
+                      aria-hidden="true"
+                    />
+                    {sequence.image ? (
+                      <span className="relative aspect-square w-20 shrink-0 overflow-hidden border border-bone/15 sm:w-28">
+                        <Image
+                          src={sequence.image}
+                          alt=""
+                          fill
+                          sizes="112px"
+                          className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                        />
+                      </span>
+                    ) : null}
+                    <div className="min-w-0">
+                      <p className="eyebrow text-bone/45">
+                        Séquence {sequence.index} · {sequence.theme}
+                      </p>
+                      <h3 className="display-xl mt-3 text-2xl transition-colors group-hover:text-gold sm:text-4xl">
                         {sequence.title}
-                      </span>
-                      <span className="text-[10px] uppercase tracking-[0.22em] text-bone/40">
-                        {sequence.index} · {sequence.theme}
-                      </span>
+                      </h3>
+                      <p className="mt-3 max-w-md text-sm leading-relaxed text-bone/60">
+                        {sequence.body}
+                      </p>
                     </div>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-bone/55">
-                      {sequence.body}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
+                  </article>
+                </Reveal>
+              </li>
             ))}
           </ol>
         </div>
@@ -667,6 +682,7 @@ export function BookingCta({ index = "09" }: { index?: string }) {
 export function MarqueeBand() {
   return (
     <div className="border-y border-bone/12 bg-ink py-5">
+      <VelocitySkew>
       <Marquee
         items={[
           "AFROBEAT",
@@ -681,6 +697,7 @@ export function MarqueeBand() {
         className="display-xl text-3xl text-bone/25 sm:text-5xl"
         separator="·"
       />
+      </VelocitySkew>
     </div>
   );
 }
