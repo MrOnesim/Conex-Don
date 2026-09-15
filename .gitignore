@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+/.pnpm/
+/yarn.lock
+/p-lockfile
+
+# Next.js
+/.next/
+/out/
+
+# Environment
+.env*
+
+# Misc
+.DS_Store
+*.pem
+
+# Docker
+.dockerignore
