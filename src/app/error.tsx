@@ -54,7 +54,7 @@ export default function Error({
         {process.env.NODE_ENV === "development" && (
           <details className="mt-8 text-left text-xs text-bone/40">
             <summary className="cursor-pointer mb-2">Détails techniques</summary>
-            <pre className="bg-bone/5 p-4 rounded overflow-auto">{error.message}</pre>
+            <pre className="bg-bone/5 p-4 overflow-auto">{error.message}</pre>
             {error.digest && <p>Digest: {error.digest}</p>}
           </details>
         )}

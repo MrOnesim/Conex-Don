@@ -240,7 +240,7 @@ export function ModeAvionRail({
 
 /* -------------------------------------------------------------- heritage */
 
-export function HeritageSection() {
+export function HeritageSection({ index = "04" }: { index?: string }) {
   return (
     <section className="relative overflow-hidden border-b border-bone/10 bg-ink">
       <div className="absolute inset-0 -z-10">
@@ -257,7 +257,7 @@ export function HeritageSection() {
       <div className="mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-20">
           <div>
-            <Kicker color="text-gold">04 — Live expérience 2026</Kicker>
+            <Kicker color="text-gold">{index} — Live expérience 2026</Kicker>
             <h2 className="display-xl mt-6 text-[clamp(3rem,14vw,5rem)] leading-[0.84] sm:text-7xl lg:text-[clamp(4rem,7rem,5.5rem)]">
               HÉRITAGE
               <br />
@@ -302,7 +302,7 @@ export function HeritageSection() {
                         alt=""
                         fill
                         sizes="64px"
-                        className="object-cover duotone transition-transform duration-700 group-hover:scale-110"
+                        className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0"
                       />
                     </span>
                   ) : null}
@@ -385,12 +385,12 @@ export function LatestRelease({ release }: { release: ReleaseView }) {
 
 /* ------------------------------------------------------------------- duo */
 
-export function DuoSection() {
+export function DuoSection({ index = "06" }: { index?: string }) {
   return (
     <section className="relative border-b border-bone/10 bg-ink">
       <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <SectionHead
-          index="06"
+          index={index}
           label="Conex / Don"
           title="Deux esprits"
           intro="Conex apporte la douceur mélodique. Don, des flows plus directs et virulents. Ensemble, ils utilisent l'humour, le langage populaire et l'observation du quotidien pour raconter des réalités béninoises."
@@ -407,7 +407,7 @@ export function DuoSection() {
                       alt={`${member.name} — ${member.fullName}`}
                       fill
                       sizes="(max-width: 1024px) 92vw, 45vw"
-                      className="object-cover duotone transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 img-zoom"
+                      className="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0 img-zoom"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
@@ -489,7 +489,7 @@ export function StatsBand() {
 
 /* ------------------------------------------------------------------- live */
 
-export function LiveBanner({ events }: { events: EventView[] }) {
+export function LiveBanner({ events, index = "07" }: { events: EventView[]; index?: string }) {
   const upcoming = events.filter((event) => event.status === "upcoming");
   const archives = events.filter((event) => event.status !== "upcoming").slice(0, 3);
   const hero = upcoming[0] ?? archives[0];
@@ -502,7 +502,7 @@ export function LiveBanner({ events }: { events: EventView[] }) {
         <div className="flex flex-wrap items-center gap-4">
           <span className="flex items-center gap-2 eyebrow text-gold">
             <span className="live-dot block h-2 w-2 rounded-full bg-clay" />
-            07 — Live
+            {index} — Live
           </span>
         </div>
 
@@ -561,13 +561,21 @@ export function LiveBanner({ events }: { events: EventView[] }) {
 
 /* ------------------------------------------------------------------- news */
 
-export function NewsGrid({ posts, limit }: { posts: NewsView[]; limit?: number }) {
+export function NewsGrid({
+  posts,
+  limit,
+  index = "08",
+}: {
+  posts: NewsView[];
+  limit?: number;
+  index?: string;
+}) {
   const list = typeof limit === "number" ? posts.slice(0, limit) : posts;
   return (
     <section className="border-b border-bone/10 bg-ink-soft">
       <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <SectionHead
-          index="08"
+          index={index}
           label="Newsroom"
           title="Actualités"
           intro="Sorties, concerts, presse, annonces et coulisses. La newsroom centrale du duo."
@@ -614,14 +622,14 @@ export function NewsGrid({ posts, limit }: { posts: NewsView[]; limit?: number }
 
 /* -------------------------------------------------------------- booking cta */
 
-export function BookingCta() {
+export function BookingCta({ index = "09" }: { index?: string }) {
   return (
     <section className="relative overflow-hidden bg-clay">
       <div className="weave absolute inset-0 opacity-30" aria-hidden="true" />
       <div className="relative mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,0.4fr)] lg:gap-16">
           <div>
-            <p className="eyebrow text-bone/70">09 — Professionnels</p>
+            <p className="eyebrow text-bone/70">{index} — Professionnels</p>
             <h2 className="display-xl mt-5 text-[14vw] leading-[0.84] text-bone sm:text-7xl lg:text-[7rem]">
               BOOK CONEX &amp; DON
             </h2>

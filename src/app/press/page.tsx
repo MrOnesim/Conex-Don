@@ -72,7 +72,7 @@ export default async function PressPage() {
                   accent={categoryAccent[lead.category] ?? "#D6A83A"}
                   sizes="(max-width: 1024px) 92vw, 46vw"
                   className="h-full w-full"
-                  imageClassName="object-cover duotone transition-transform duration-[1200ms] group-hover:scale-105"
+                  imageClassName="object-cover duotone transition-all duration-[1200ms] group-hover:scale-105 group-hover:grayscale-0"
                 />
                 <span
                   className="absolute left-4 top-4 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.2em]"

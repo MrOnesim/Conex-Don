@@ -60,41 +60,59 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["music", "entertainment"],
+  "categories": [
+    "music",
+    "entertainment"
+  ],
   "shortcuts": [
     {
       "name": "Musique",
       "short_name": "Musique",
       "description": "Découvrir la discographie",
       "url": "/musique",
-      "icons": [{ "src": "/icons/music-icon.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/music-icon.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Vidéos",
       "short_name": "Vidéos",
       "description": "Voir les clips et live",
       "url": "/videos",
-      "icons": [{ "src": "/icons/video-icon.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/video-icon.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Live",
       "short_name": "Live",
       "description": "Prochains concerts",
       "url": "/live",
-      "icons": [{ "src": "/icons/live-icon.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/live-icon.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "screenshots": [
     {
       "src": "/screenshots/home.png",
-      "sizes": "1280x720",
+      "sizes": "1376x768",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Page d'accueil"
     },
     {
       "src": "/screenshots/music.png",
-      "sizes": "1280x720",
+      "sizes": "1376x768",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Discographie"

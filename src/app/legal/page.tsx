@@ -56,7 +56,7 @@ export default function LegalPage() {
                 ))}
                 {section.isCookieSection && (
                   <div className="pt-2">
-                    <CookiePreferencesButton className="inline-block rounded-lg border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold hover:bg-gold hover:text-ink transition-colors">
+                    <CookiePreferencesButton className="inline-block border border-gold/40 bg-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold hover:bg-gold hover:text-ink transition-colors">
                       Ouvrir les préférences de cookies
                     </CookiePreferencesButton>
                   </div>

@@ -86,7 +86,7 @@ export default function StoryPage() {
         </div>
       </section>
 
-      <DuoSection />
+      <DuoSection index="02" />
       <StatsBand />
     </>
   );

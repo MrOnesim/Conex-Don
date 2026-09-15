@@ -33,7 +33,7 @@
     --color-ink-soft: #f0ebe2;
     --color-bone: #12100f;
     --color-earth: #6f4a32;
-    --color-gold: #b8860b;
+    --color-gold: #8a6a12;
     --color-clay: #9e382c;
     --color-forest: #173f32;
   }
@@ -58,7 +58,12 @@
 
   ::selection {
     background-color: var(--color-gold);
-    color: var(--color-ink);
+    color: #080808;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
   }
 
   h1,
@@ -183,14 +188,14 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .glass-dark {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Glass overlay for section cards */
@@ -215,7 +220,7 @@
   content: "";
   position: absolute;
   inset: -2px;
-  border-radius: calc(inherit + 2px);
+  border-radius: inherit;
   border: 1px solid var(--color-gold);
   z-index: -1;
   opacity: 0;
@@ -273,25 +278,49 @@
 .delay-4 { animation-delay: 0.4s; }
 .delay-5 { animation-delay: 0.5s; }
 
-.text-ink-on-bone {
-  color: var(--color-bone);
+/* En thème clair, les images duotone se fondent dans le papier */
+html.light .duotone {
+  mix-blend-mode: multiply;
 }
 
-.text-bone-on-ink {
-  color: var(--color-ink);
+html.light .grain::after {
+  opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 
-/* Improved contrast utilities */
-.bg-ink-soft-on-ink {
-  background-color: var(--color-ink-soft);
+/* Squelette de chargement — langage visuel de la marque (angles vifs + balayage) */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--color-bone) 8%, transparent);
 }
 
-.border-bone-on-ink {
-  border-color: var(--color-bone);
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-bone) 14%, transparent) 45%,
+    color-mix(in srgb, var(--color-gold) 10%, transparent) 50%,
+    color-mix(in srgb, var(--color-bone) 14%, transparent) 55%,
+    transparent 100%
+  );
+  animation: skeleton-sweep 1.8s var(--ease-out-expo) infinite;
 }
 
-.border-ink-on-bone {
-  border-color: var(--color-ink);
+@keyframes skeleton-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Filet signature or → argile */
+.hairline-gold {
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-clay));
 }
 
 .reveal-mask {
@@ -327,25 +356,6 @@
   transform: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-  .rise,
-  .wipe {
-    opacity: 1;
-    transform: none;
-  }
-  .reveal-mask {
-    clip-path: none;
-  }
-}
-
 /* Performance: disable heavy textures for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .grain,
@@ -362,7 +372,7 @@
 
 .img-zoom:hover {
   transform: scale(1.05);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, �.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .img-lift {
@@ -503,6 +513,10 @@
   transform-origin: left;
   transition: transform 0.45s var(--ease-out-expo);
 }
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
 
 /* Enhanced button hover */
 .button-hover {
@@ -559,23 +573,4 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-  .rise,
-  .wipe {
-    opacity: 1;
-    transform: none;
-  }
-  .reveal-mask {
-    clip-path: none;
-  }
 }

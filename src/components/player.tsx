@@ -128,11 +128,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const playerRef = useRef<YTPlayer | null>(null);
   const intendRef = useRef(false);
   const trackIndexRef = useRef(trackIndex);
-  trackIndexRef.current = trackIndex;
   const volumeRef = useRef(volume);
-  volumeRef.current = volume;
   const playingRef = useRef(playing);
-  playingRef.current = playing;
+
+  // Miroirs des states pour les callbacks du lecteur YouTube (hors render).
+  useEffect(() => {
+    trackIndexRef.current = trackIndex;
+  }, [trackIndex]);
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   const track = engineTracks[trackIndex];
 
@@ -428,14 +436,18 @@ export function PlayerDock() {
         >
           <div
             className="h-full bg-gold transition-[width] duration-200 ease-linear"
-            style={{ width: `${progress}%`, backgroundColor: track.accent }}
+            style={{
+              width: `${progress}%`,
+              backgroundColor: track.accent,
+              boxShadow: `0 0 12px ${track.accent}`,
+            }}
           />
         </div>
         <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-3 py-2 sm:gap-5 sm:px-6 sm:py-3">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="relative h-11 w-11 shrink-0 overflow-hidden border border-bone/20 sm:h-12 sm:w-12"
+            className="group relative h-11 w-11 shrink-0 overflow-hidden border border-bone/20 transition-colors hover:border-gold sm:h-12 sm:w-12"
             aria-label="Ouvrir le mode LISTEN"
           >
             <Image
@@ -443,7 +455,7 @@ export function PlayerDock() {
               alt={`Visuel — ${track.project}`}
               fill
               sizes="48px"
-              className="object-cover duotone"
+              className="object-cover duotone transition-[filter] duration-700 group-hover:grayscale-0"
             />
           </button>
 

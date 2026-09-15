@@ -107,7 +107,7 @@ export function Hero() {
                 ref={contentRef}
                 className="relative mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12"
             >
-                <h1 className="display-xl flex flex-wrap items-center text-[clamp(2rem,19vw,4rem)] leading-[0.78] sm:text-[clamp(1.5rem,16vw,3rem)] lg:text-[clamp(3rem,15rem,5rem)]">
+                <h1 className="display-xl flex flex-wrap items-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
                     <span
                         ref={leftRef}
                         className="inline-block will-change-transform"
@@ -116,7 +116,7 @@ export function Hero() {
                     </span>
                     <span
                         ref={ampRef}
-                        className="mx-2 inline-block font-[Instrument_Serif] text-[clamp(1.5rem,10vw,3rem)] italic text-gold sm:mx-5 sm:text-[clamp(2rem,8vw,2.5rem)] lg:text-[clamp(4rem,7rem,5rem)]"
+                        className="mx-2 inline-block font-[Instrument_Serif] text-[clamp(2rem,9vw,3.25rem)] italic text-gold sm:mx-5 sm:text-[clamp(2.75rem,6vw,4.25rem)] lg:text-[clamp(3.5rem,5vw,5.5rem)]"
                         style={{
                             fontFamily: "var(--font-serif-display)",
                             textTransform: "none",
@@ -159,7 +159,7 @@ export function Hero() {
                     ))}
                 </div>
                 <div
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-gold to-clay opacity-50 scale-100 group-hover:scale-110 transition-transform duration-500"
+                    className="hairline-gold absolute bottom-0 left-0 w-full opacity-60"
                     aria-hidden="true"
                 />
 
