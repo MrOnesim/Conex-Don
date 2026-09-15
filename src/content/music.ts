@@ -66,7 +66,7 @@ export const releases: ReleaseSeed[] = [
       "Trois voix béninoises sur un seul morceau. La dernière sortie officielle du duo.",
     longDescription:
       "Sorti le 7 mai 2026, DESSIGUIMANZANBERA réunit Conex & Don, Tony X et Fanicko autour d'une énergie commune. Le titre s'est imposé rapidement dans les classements béninois et confirme le duo comme l'un des moteurs de la nouvelle scène nationale.",
-    coverImage: "/images/DESSIGUIMANZANBERA.jpg",
+    coverImage: "/images/DESSIGUIMANZANBERA.png",
     accent: "#9E382C",
     links: {
       spotify: "https://open.spotify.com/album/7h9ycuGhCE5VPrSI8GfmgF",
@@ -125,7 +125,7 @@ export const releases: ReleaseSeed[] = [
     year: 2026,
     tagline: "Single 2026",
     description: "Nouveau chapitre 2026, entre écriture du quotidien et groove.",
-    coverImage: "/images/AGBON.png",
+    coverImage: "/images/Tchiza.jpg",
     accent: "#6F4A32",
     links: {
       ...base,
@@ -250,7 +250,7 @@ export const releases: ReleaseSeed[] = [
     year: 2025,
     tagline: "Single",
     description: "Sortie du 12 avril 2025.",
-    coverImage: "/images/EYA.png",
+    coverImage: "/images/MINKA-NANGBE.jpeg",
     accent: "#173F32",
     links: {
       ...base,
@@ -270,7 +270,7 @@ export const releases: ReleaseSeed[] = [
     tagline: "Énergie · Persévérance",
     description:
       "Énergie, persévérance et commentaire social, tourné vers la jeunesse béninoise.",
-    coverImage: "/images/FOLLOW-YOU-GO.png",
+    coverImage: "/images/AKA.jpg",
     accent: "#9E382C",
     links: {
       ...base,
@@ -400,7 +400,7 @@ title: "DÉCOUVERTE",
     tagline: "Premier EP — 5 titres",
     description:
       "Le premier projet officiel : cinq morceaux, dix-huit minutes, une entrée en matière.",
-    coverImage: "/images/MY-WIFE.png",
+    coverImage: "/images/Découverte.jpg",
     accent: "#173F32",
     label: "Phoenix Label / ONErpm",
     links: {

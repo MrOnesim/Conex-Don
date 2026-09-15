@@ -83,11 +83,11 @@ type PlayerApi = {
 const PlayerContext = createContext<PlayerApi | null>(null);
 
 const covers: Record<string, string> = {
-  medley: "/images/HÉRITAGE-VIVANT.jpg",
-  "djo-agado": "/images/MAN-LON-ô.png",
+  medley: "/images/MEDLEY.png",
+  "djo-agado": "/images/AGADO.png",
   "ayato-feel": "/images/AYATO.png",
   "mode-avion": "/images/MODE-AVION.jpg",
-  dessigui: "/images/DESSIGUIMANZANBERA.jpg",
+  dessigui: "/images/DESSIGUIMANZANBERA.png",
 };
 
 const fmt = (seconds: number) => {

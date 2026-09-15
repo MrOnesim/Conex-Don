@@ -84,6 +84,7 @@ export const duo: Record<"conex" | "don", DuoMember> = {
     fullName: "Houngbedji Constant Exhaucé",
     origin: "Ouidah, Bénin",
     role: "La douceur mélodique",
+    image: "/images/conex.jpeg",
     bio: `Conex, c'est la voix qui porte. Né à Ouidah, il apporte au duo ce qui manque au rap pur : la mélodie, le souffle, l'émotion qui reste après le morceau.
 
 Il écrit des refrains qu'un public peut chanter sans connaître l'artiste. Sa douceur n'est jamais une faiblesse — c'est elle qui donne aux titres sociaux du duo leur dimension humaine.`,
@@ -95,6 +96,7 @@ Il écrit des refrains qu'un public peut chanter sans connaître l'artiste. Sa d
     fullName: "Acakpo Dieudonné",
     origin: "Avédji, Bénin",
     role: "Le flow direct",
+    image: "/images/Don.jpeg",
     bio: `Don, c'est l'attaque. Originaire d'Avédji, il est celui qui a commencé : les premiers freestyles publiés sur TikTok en 2022, filmés dans le quotidien, viennent de lui.
 
 Son flow est direct, virulent, drôle. Il observe la rue béninoise et la restitue sans la traduire — ni l'édulcorer.`,
@@ -130,7 +132,7 @@ Pas de studio, pas de label, pas de plan. Un téléphone, une ville, deux amis d
     body: `Cinq morceaux, dix-huit minutes : Dougbe, L'Alcool, Aventurier (feat. First King), Pardon chef, Trahison. Le premier projet officiel, distribué avec le Phoenix Label / ONErpm.
 
 C'est aussi l'année où AYATO devient le morceau le plus identifié par le public.`,
-    image: "/images/MY-WIFE.png",
+    image: "/images/Découverte.jpg",
     releaseSlug: "decouverte",
     highlights: ["5 titres", "Phoenix Label / ONErpm", "Ayato"],
   },
@@ -202,7 +204,7 @@ Un projet tourné vers la mémoire collective, la résilience, l'amour, la spiri
     body: `La dernière sortie identifiée du duo : 3 min 09 avec Tony X et Fanicko. Le titre a connu de très bons classements au Bénin, avec une première place dans plusieurs relevés.
 
 Et l'histoire continue.`,
-    image: "/images/DESSIGUIMANZANBERA.jpg",
+    image: "/images/DESSIGUIMANZANBERA.png",
     releaseSlug: "dessiguimanzanbera",
     highlights: ["3:09", "Tony X", "Fanicko", "#1 au Bénin"],
   },
@@ -235,24 +237,28 @@ export const heritage = {
       index: "01",
       title: "MEDLEY",
       theme: "Mémoire",
+      image: "/images/MEDLEY.png",
       body: "Le rappel de tout ce qui a précédé : les freestyles, les titres, les voix, le public.",
     },
     {
       index: "02",
       title: "DJO AGADO",
       theme: "Résilience",
+      image: "/images/AGADO.png",
       body: "Ce qui tient debout quand tout vacille. La famille, la rue, la patience.",
     },
     {
       index: "03",
       title: "DJIVÈDÉ",
       theme: "Vigilance",
+      image: "/images/Djivèdé.png",
       body: "Observer, comprendre, ne pas se laisser prendre. La lucidité comme héritage.",
     },
     {
       index: "04",
       title: "MI ZÉ GAN NOU WÉ / GOSPEL",
       theme: "Gratitude",
+      image: "/images/Mi-ze-gan-gospel.png",
       body: "Le remerciement final. La spiritualité comme point d'orgue.",
     },
   ],

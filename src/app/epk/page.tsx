@@ -35,13 +35,26 @@ export const metadata: Metadata = {
 
 const photos = [
   { src: "/images/HÉRITAGE-VIVANT.jpg", label: "HÉRITAGE VIVANT — visuel (carré)" },
-  { src: "/images/AGBON.png", label: "AGBON — visuel (carré)" },
-  { src: "/images/AYATO.png", label: "AYATO — visuel (carré)" },
-  { src: "/images/DESSIGUIMANZANBERA.jpg", label: "DESSIGUIMANZANBERA — visuel (carré)" },
-  { src: "/images/MAN-LON-ô.png", label: "MAN LON Ô — visuel (carré)" },
+  { src: "/images/DESSIGUIMANZANBERA.png", label: "DESSIGUIMANZANBERA — visuel (carré)" },
   { src: "/images/MODE-AVION.jpg", label: "MODE AVION — visuel (carré)" },
   { src: "/images/SYMPHONIE-BÉNINOISE.webp", label: "LA SYMPHONIE BÉNINOISE — visuel (carré)" },
+  { src: "/images/Découverte.jpg", label: "DÉCOUVERTE — visuel (carré)" },
+  { src: "/images/Tchiza.jpg", label: "TCHIZA — visuel (carré)" },
+  { src: "/images/AKA.jpg", label: "AKA — visuel (carré)" },
+  { src: "/images/MINKA-NANGBE.jpeg", label: "MINKANANGBÈ — visuel (carré)" },
   { src: "/images/TOR-TOR.jpeg", label: "TOR TOR — visuel (carré)" },
+  { src: "/images/PERCER.png", label: "PERCER — visuel (carré)" },
+  { src: "/images/PAUSE.png", label: "PAUSE — visuel (carré)" },
+  { src: "/images/VAMIDJO.png", label: "VAMIDJO — visuel (carré)" },
+  { src: "/images/Di-TOLOLO.png", label: "DI TOLOLO — visuel (carré)" },
+  { src: "/images/WOTO-WOTO.png", label: "WOTTO WOTTO — visuel (carré)" },
+  { src: "/images/MEDLEY.png", label: "HÉRITAGE VIVANT — Medley" },
+  { src: "/images/AGADO.png", label: "HÉRITAGE VIVANT — Djo Agado" },
+  { src: "/images/Djivèdé.png", label: "HÉRITAGE VIVANT — Djivèdé" },
+  { src: "/images/Mi-ze-gan-gospel.png", label: "HÉRITAGE VIVANT — Gospel" },
+  { src: "/images/AGBON.png", label: "AGBON — visuel (carré)" },
+  { src: "/images/AYATO.png", label: "AYATO — visuel (carré)" },
+  { src: "/images/MAN-LON-ô.png", label: "MAN LON Ô — visuel (carré)" },
 ];
 
 export default async function EpkPage() {

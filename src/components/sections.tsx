@@ -40,15 +40,17 @@ export function StoryTeaser() {
 
         <Reveal variant="mask" className="relative">
           <div className="relative flex aspect-4/5 w-full flex-col justify-between overflow-hidden border border-bone/15 bg-ink-soft grain">
+            <Image
+              src="/images/Don.jpeg"
+              alt="Don — les premiers freestyles publiés sur TikTok en 2022"
+              fill
+              sizes="(max-width: 1024px) 90vw, 45vw"
+              className="object-cover duotone opacity-90"
+            />
             <div
-              className="absolute inset-0 archwave opacity-40"
+              className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"
               aria-hidden="true"
             />
-            <div className="relative flex h-full items-center justify-center px-8 text-center opacity-40" aria-hidden="true">
-              <p className="display-xl text-[clamp(2rem,8vw,3rem)] leading-[0.9] sm:text-6xl">
-                C &amp; D
-              </p>
-            </div>
             <div className="absolute bottom-0 left-0 bg-ink/85 px-5 py-4">
               <p className="eyebrow text-gold">2022</p>
               <p className="mt-1 text-xs text-bone/60">TikTok · freestyles · deux amis d&apos;enfance</p>
@@ -141,6 +143,16 @@ export function SymphonieScore({
 
 /* ---------------------------------------------------------- mode avion rail */
 
+const modeAvionArt: Record<string, string> = {
+  PERCER: "/images/PERCER.png",
+  "TOR TOR": "/images/TOR-TOR.jpeg",
+  PAUSE: "/images/PAUSE.png",
+  VAMIDJO: "/images/VAMIDJO.png",
+  "COCA COLA": "/images/MODE-AVION.jpg",
+  "DI TOLOLO": "/images/Di-TOLOLO.png",
+  "WOTTO WOTTO": "/images/WOTO-WOTO.png",
+};
+
 export function ModeAvionRail({
   release,
   tracks,
@@ -184,13 +196,25 @@ export function ModeAvionRail({
           {tracks.map((track, index) => (
             <div
               key={track.title}
-              className="group relative flex w-[74vw] shrink-0 flex-col justify-between border-l border-ink/15 px-5 py-8 transition-colors duration-500 hover:bg-ink hover:text-bone sm:w-[38vw] lg:w-[24vw]"
+              className="group relative flex w-[74vw] shrink-0 flex-col justify-between overflow-hidden border-l border-ink/15 px-5 py-8 transition-colors duration-500 hover:bg-ink hover:text-bone sm:w-[38vw] lg:w-[24vw]"
               data-cursor="On écoute ?"
             >
-              <span className="text-[11px] tabular-nums text-ink/40 group-hover:text-bone/40">
+              <div
+                className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-25"
+                aria-hidden="true"
+              >
+                <Image
+                  src={modeAvionArt[track.title] ?? "/images/MODE-AVION.jpg"}
+                  alt=""
+                  fill
+                  sizes="24vw"
+                  className="object-cover"
+                />
+              </div>
+              <span className="relative z-10 text-[11px] tabular-nums text-ink/40 group-hover:text-bone/40">
                 {String(track.position).padStart(2, "0")} / 0{tracks.length}
               </span>
-              <span>
+              <span className="relative z-10">
                 <span className="display-xl block text-3xl leading-[0.9] sm:text-5xl lg:text-6xl">
                   {track.title}
                 </span>
@@ -200,7 +224,7 @@ export function ModeAvionRail({
                   </span>
                 ) : null}
               </span>
-              <span className="flex items-center justify-between">
+              <span className="relative z-10 flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-[0.2em] text-ink/45 group-hover:text-bone/50">
                   Mode avion — {index === 0 ? "décollage" : index === tracks.length - 1 ? "atterrissage" : "en vol"}
                 </span>
@@ -270,18 +294,31 @@ export function HeritageSection() {
           <ol className="divide-y divide-bone/12 border-t border-bone/12">
             {heritage.sequences.map((sequence, index) => (
               <Reveal as="li" key={sequence.title} delay={index * 90} variant="wipe">
-                <div className="group py-6">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <span className="display-xl text-2xl transition-colors group-hover:text-gold sm:text-4xl">
-                      {sequence.title}
+                <div className="group flex items-center gap-4 py-6 sm:gap-6">
+                  {sequence.image ? (
+                    <span className="relative hidden aspect-square w-16 shrink-0 overflow-hidden border border-bone/15 sm:block">
+                      <Image
+                        src={sequence.image}
+                        alt=""
+                        fill
+                        sizes="64px"
+                        className="object-cover duotone transition-transform duration-700 group-hover:scale-110"
+                      />
                     </span>
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-bone/40">
-                      {sequence.index} · {sequence.theme}
-                    </span>
+                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <span className="display-xl text-2xl transition-colors group-hover:text-gold sm:text-4xl">
+                        {sequence.title}
+                      </span>
+                      <span className="text-[10px] uppercase tracking-[0.22em] text-bone/40">
+                        {sequence.index} · {sequence.theme}
+                      </span>
+                    </div>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-bone/55">
+                      {sequence.body}
+                    </p>
                   </div>
-                  <p className="mt-3 max-w-md text-sm leading-relaxed text-bone/55">
-                    {sequence.body}
-                  </p>
                 </div>
               </Reveal>
             ))}
