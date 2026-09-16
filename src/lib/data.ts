@@ -1,6 +1,6 @@
 import { asc, desc, eq } from "drizzle-orm";
 
-import { db } from "@/db";
+import { db, hasDatabaseUrl } from "@/db";
 import {
   alobaPosts,
   events as eventsTable,
@@ -179,6 +179,7 @@ async function seed(): Promise<void> {
 }
 
 export async function ensureSeeded(): Promise<boolean> {
+  if (!hasDatabaseUrl) return false;
   if (!seedPromise) {
     seedPromise = seed();
   }
@@ -263,7 +264,7 @@ const fallbackNews: NewsView[] = newsSeed.map((post) => ({
 
 export async function getReleases(): Promise<ReleaseView[]> {
   try {
-    await ensureSeeded();
+    if (!(await ensureSeeded())) return fallbackReleases;
     const rows = await db
       .select()
       .from(releasesTable)
@@ -296,6 +297,7 @@ export async function getRelease(
   const all = await getReleases();
   const release = all.find((item) => item.slug === slug);
   if (!release) return null;
+  if (!hasDatabaseUrl) return { release, tracks: fallbackTracks[slug] ?? [] };
   try {
     const rows = await db
       .select()
@@ -322,7 +324,7 @@ export async function getRelease(
 
 export async function getVideos(): Promise<VideoView[]> {
   try {
-    await ensureSeeded();
+    if (!(await ensureSeeded())) return fallbackVideos;
     const rows = await db.select().from(videosTable).orderBy(asc(videosTable.sortOrder));
     if (rows.length === 0) return fallbackVideos;
     return rows.map((row) => ({
@@ -343,7 +345,7 @@ export async function getVideos(): Promise<VideoView[]> {
 
 export async function getEvents(): Promise<EventView[]> {
   try {
-    await ensureSeeded();
+    if (!(await ensureSeeded())) return fallbackEvents;
     const rows = await db.select().from(eventsTable).orderBy(asc(eventsTable.sortOrder));
     if (rows.length === 0) return fallbackEvents;
     return rows.map((row) => ({
@@ -364,7 +366,7 @@ export async function getEvents(): Promise<EventView[]> {
 
 export async function getNews(): Promise<NewsView[]> {
   try {
-    await ensureSeeded();
+    if (!(await ensureSeeded())) return fallbackNews;
     const rows = await db.select().from(newsTable).orderBy(asc(newsTable.sortOrder));
     if (rows.length === 0) return fallbackNews;
     return rows.map((row) => ({
@@ -410,7 +412,7 @@ const fallbackAlobaPosts: AlobaPostView[] = alobaSeed.map((post, index) => ({
 
 export async function getAlobaPosts(): Promise<AlobaPostView[]> {
   try {
-    await ensureSeeded();
+    if (!(await ensureSeeded())) return fallbackAlobaPosts;
     const rows = await db
       .select()
       .from(alobaPosts)
