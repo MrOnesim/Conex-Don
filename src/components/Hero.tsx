@@ -107,10 +107,10 @@ export function Hero() {
                 ref={contentRef}
                 className="relative mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12"
             >
-                <h1 className="display-xl flex flex-wrap items-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
+<h1 className="display-xl flex flex-wrap items-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
                     <span
                         ref={leftRef}
-                        className="inline-block will-change-transform"
+                        className="inline-block will-change-transform animate-in fade-in slide-in-from-bottom-5 duration-200"
                     >
                         CONEX
                     </span>
@@ -122,11 +122,11 @@ export function Hero() {
                             textTransform: "none",
                         }}
                     >
-                        &amp;
+                        &
                     </span>
                     <span
                         ref={rightRef}
-                        className="inline-block will-change-transform"
+                        className="inline-block will-change-transform animate-in fade-in slide-in-from-bottom-5 duration-300"
                     >
                         DON
                     </span>

@@ -73,7 +73,7 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
                     accent={release.accent}
                     sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 31vw"
                     className="h-full w-full"
-                    imageClassName="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0"
+                    imageClassName="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0 group-hover:translate-y-[-4px] group-hover:shadow-[0_-12px_32px_rgba(0,0,0,0.4)]"
                   />
                 ) : (
                   <div
