@@ -303,7 +303,7 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
                 style={{ top: `${104 + position * 26}px` }}
               >
                 <Reveal delay={position * 60}>
-                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] sm:gap-7 sm:p-7">
+                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] sm:gap-7 sm:p-7 animate-in fade-in slide-in-from-bottom-5 duration-200">
                     <span
                       className="absolute inset-y-0 left-0 w-[3px]"
                       style={{
@@ -318,7 +318,7 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
                           alt=""
                           fill
                           sizes="112px"
-                          className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                          className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0 group-hover:translate-y-[-4px]_group-hover:shadow-[0_-12px_32px_rgba(0,0,0,0.4)]"
                         />
                       </span>
                     ) : null}
