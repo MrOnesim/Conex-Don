@@ -87,8 +87,7 @@ export function Hero() {
 
     return (
         <section
-            className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 sm:pt-32"
-            data-cursor="Aloba !"
+            className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pb-24"
             aria-label="Conex & Don — l'héritage en mouvement"
         >
             <div className="absolute inset-0" aria-hidden="true">
@@ -98,16 +97,16 @@ export function Hero() {
                     fill
                     priority
                     sizes="100vw"
-                    className="object-cover opacity-35 duotone kenburns"
+                    className="object-cover opacity-50 duotone kenburns"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/40 to-ink" />
             </div>
 
             <div
                 ref={contentRef}
-                className="relative mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12"
+                className="relative mx-auto w-full max-w-[1600px] px-5 text-center sm:px-8 lg:max-w-none lg:px-12"
             >
-<h1 className="display-xl flex flex-wrap items-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
+<h1 className="display-xl flex flex-wrap items-center justify-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
                     <span
                         ref={leftRef}
                         className="inline-block will-change-transform animate-in fade-in slide-in-from-bottom-5 duration-200"
@@ -116,7 +115,7 @@ export function Hero() {
                     </span>
                     <span
                         ref={ampRef}
-                        className="mx-2 inline-block font-[Instrument_Serif] text-[clamp(2rem,9vw,3.25rem)] italic text-gold sm:mx-5 sm:text-[clamp(2.75rem,6vw,4.25rem)] lg:text-[clamp(3.5rem,5vw,5.5rem)]"
+                        className="mx-5 inline-block font-[Instrument_Serif] text-[clamp(2rem,9vw,3.25rem)] italic text-gold sm:mx-5 sm:text-[clamp(2.75rem,6vw,4.25rem)] lg:text-[clamp(3.5rem,5vw,5.5rem)]"
                         style={{
                             fontFamily: "var(--font-serif-display)",
                             textTransform: "none",
@@ -132,7 +131,7 @@ export function Hero() {
                     </span>
                 </h1>
 
-                <p className="mt-6 max-w-2xl text-[clamp(1rem,1.8vw,1.25rem)] leading-snug text-bone/85 sm:mt-8 sm:text-[clamp(1.25rem,2vw,1.5rem)]">
+                <p className="mx-auto mt-6 max-w-2xl text-[clamp(1rem,1.8vw,1.25rem)] leading-snug text-bone/85 sm:mt-8 sm:text-[clamp(1.25rem,2vw,1.5rem)] lg:max-w-none">
                     Deux voix-Une histoire-{" "}
                     <span className="text-gold">Un héritage.</span>
                 </p>
@@ -140,7 +139,7 @@ export function Hero() {
 
             <div className="relative">
                 {/* Années — la timeline qui se révèle au scroll */}
-                <div className="mx-auto flex max-w-[1600px] flex-wrap items-end gap-x-6 gap-y-1 px-5 sm:gap-x-12 sm:px-8 lg:px-12">
+                <div className="mx-auto flex max-w-[1600px] flex-wrap items-end gap-x-6 gap-y-8 px-5 sm:gap-x-12 sm:px-8 lg:px-12">
                     {years.map((year, index) => (
                         <span
                             key={year}
@@ -164,7 +163,7 @@ export function Hero() {
                 />
 
                 <div className="relative mx-auto mt-8 max-w-[1600px] border-t border-bone/20 px-5 pb-10 sm:px-8 lg:px-12">
-                    <div className="flex flex-col gap-6 pt-6 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="flex flex-col gap-100 pt-100 lg:flex-row lg:items-end lg:justify-between">
                         <div className="max-w-md">
                             <p className="eyebrow text-bone/45">
                                 Dernière sortie — 7 mai 2026
