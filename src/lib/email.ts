@@ -47,7 +47,35 @@ function getEmailConfig(): EmailConfig | null {
   };
 }
 
-function generateBookingEmailHtml(data: BookingEmailData): string {
+function escapeHtml(value: string | null | undefined): string {
+  return (value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function generateBookingEmailHtml(input: BookingEmailData): string {
+  // Escape only at the HTML boundary; preserve raw data for text and SMTP fields.
+  const data = {
+    reference: escapeHtml(input.reference),
+    name: escapeHtml(input.name),
+    email: escapeHtml(input.email),
+    organization: escapeHtml(input.organization),
+    phone: escapeHtml(input.phone),
+    country: escapeHtml(input.country),
+    city: escapeHtml(input.city),
+    eventType: escapeHtml(input.eventType),
+    eventDate: escapeHtml(input.eventDate),
+    capacity: escapeHtml(input.capacity),
+    budget: escapeHtml(input.budget),
+    message: escapeHtml(input.message),
+  };
+  const emailHref = escapeHtml(`mailto:${encodeURIComponent(input.email)}`);
+  const replyHref = escapeHtml(`mailto:${encodeURIComponent(input.email)}?subject=${encodeURIComponent(`Re: Booking ${input.reference}`)}`);
+  const phoneHref = escapeHtml(`tel:${encodeURIComponent(input.phone ?? "")}`);
+
   return `
 <!DOCTYPE html>
 <html lang="fr">
@@ -72,7 +100,7 @@ function generateBookingEmailHtml(data: BookingEmailData): string {
       </tr>
       <tr>
         <td style="padding: 10px 0; font-weight: 600; color: #666;">Email</td>
-        <td style="padding: 10px 0; color: #1a1a1a;"><a href="mailto:${data.email}" style="color: #D6A83A;">${data.email}</a></td>
+        <td style="padding: 10px 0; color: #1a1a1a;"><a href="${emailHref}" style="color: #D6A83A;">${data.email}</a></td>
       </tr>
       ${data.organization ? `
       <tr>
@@ -83,7 +111,7 @@ function generateBookingEmailHtml(data: BookingEmailData): string {
       ${data.phone ? `
       <tr>
         <td style="padding: 10px 0; font-weight: 600; color: #666;">Téléphone</td>
-        <td style="padding: 10px 0; color: #1a1a1a;"><a href="tel:${data.phone}" style="color: #D6A83A;">${data.phone}</a></td>
+        <td style="padding: 10px 0; color: #1a1a1a;"><a href="${phoneHref}" style="color: #D6A83A;">${data.phone}</a></td>
       </tr>
       ` : ""}
       ${data.country ? `
@@ -135,7 +163,7 @@ function generateBookingEmailHtml(data: BookingEmailData): string {
     ` : ""}
 
     <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; text-align: center;">
-      <a href="mailto:${data.email}?subject=Re: Booking ${data.reference}" 
+      <a href="${replyHref}" 
          style="display: inline-block; background: #D6A83A; color: #080808; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
         Répondre au demandeur
       </a>
