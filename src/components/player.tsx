@@ -44,7 +44,10 @@ type YTPlayerConfig = {
 };
 
 type YTNamespace = {
-  Player: new (element: HTMLElement, config: YTPlayerConfig) => YTPlayer;
+  Player: new (
+    element: HTMLElement | string,
+    config: YTPlayerConfig,
+  ) => YTPlayer;
   PlayerState: {
     UNSTARTED: number;
     ENDED: number;
@@ -92,6 +95,30 @@ const covers: Record<string, string> = {
   dessigui: "/images/DESSIGUIMANZANBERA.png",
 };
 
+// Playback needs only these capabilities. Clipboard access is intentionally
+// not delegated to the third-party frame; YouTube can fall back to its own
+// share UI when a host policy does not grant that capability.
+const youtubeIframePermissions =
+  "autoplay; encrypted-media; picture-in-picture";
+
+function getYoutubePlayerUrl(videoId: string) {
+  const params = new URLSearchParams({
+    enablejsapi: "1",
+    playsinline: "1",
+    controls: "0",
+    disablekb: "1",
+    rel: "0",
+    iv_load_policy: "3",
+    modestbranding: "1",
+  });
+
+  if (typeof window !== "undefined") {
+    params.set("origin", window.location.origin);
+  }
+
+  return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+}
+
 const fmt = (seconds: number) => {
   const s = Math.max(0, Math.floor(seconds));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -126,8 +153,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [duration, setDuration] = useState(engineTracks[0].durationSec);
   const [open, setOpen] = useState(false);
   const [playerRequested, setPlayerRequested] = useState(false);
+  const [playerEmbedUrl, setPlayerEmbedUrl] = useState<string | null>(null);
 
-  const hostRef = useRef<HTMLDivElement | null>(null);
+  const hostRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<YTPlayer | null>(null);
   const intendRef = useRef(false);
   const trackIndexRef = useRef(trackIndex);
@@ -150,7 +178,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   // The external YouTube API is intentionally deferred until a visitor asks
   // to listen. The dock remains immediately usable without third-party work.
   useEffect(() => {
-    if (!playerRequested) return;
+    if (!playerRequested || !playerEmbedUrl) return;
     const host = hostRef.current;
     if (!host || typeof window === "undefined") return;
 
@@ -159,18 +187,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     loadYoutubeApi().then(() => {
       if (disposed || !window.YT?.Player) return;
-      while (host.firstChild) host.removeChild(host.firstChild);
-      player = new window.YT.Player(host, {
-        width: "320",
-        height: "180",
-        playerVars: {
-          playsinline: 1,
-          controls: 0,
-          disablekb: 1,
-          rel: 0,
-          iv_load_policy: 3,
-          modestbranding: 1,
-        },
+      // The iframe already exists with its constrained allow-list. Initializing
+      // it by id prevents the API from creating a second frame with YouTube's
+      // broad default permissions.
+      player = new window.YT.Player(host.id, {
         events: {
           onReady: (event) => {
             playerRef.current = event.target;
@@ -201,7 +221,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       player?.destroy();
       playerRef.current = null;
     };
-  }, [playerRequested]);
+  }, [playerEmbedUrl, playerRequested]);
 
   // Quand le mouvement change : charger la vidéo (et jouer si l'utilisateur écoute).
   useEffect(() => {
@@ -236,25 +256,37 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     playerRef.current?.pauseVideo();
   }, []);
 
-  const play = useCallback((index?: number) => {
-    const target = index ?? trackIndexRef.current;
-    intendRef.current = true;
+  const requestPlayerFrame = useCallback((videoId: string) => {
+    // Keep the first iframe source stable after mounting; subsequent track
+    // changes are handled through the YouTube API rather than replacing it.
+    setPlayerEmbedUrl(
+      (currentUrl) => currentUrl ?? getYoutubePlayerUrl(videoId),
+    );
     setPlayerRequested(true);
-    setPlaying(true);
-    if (target !== trackIndexRef.current) {
-      setTrackIndex(target);
-      return;
-    }
-    const player = playerRef.current;
-    if (player) {
-      const id = engineTracks[target].youtubeId;
-      const states = window.YT?.PlayerState;
-      const state = player.getPlayerState();
-      const isLoaded = player.getVideoData()?.video_id === id;
-      if (isLoaded && states && state !== states.ENDED) player.playVideo();
-      else player.loadVideoById(id);
-    }
   }, []);
+
+  const play = useCallback(
+    (index?: number) => {
+      const target = index ?? trackIndexRef.current;
+      intendRef.current = true;
+      requestPlayerFrame(engineTracks[target].youtubeId);
+      setPlaying(true);
+      if (target !== trackIndexRef.current) {
+        setTrackIndex(target);
+        return;
+      }
+      const player = playerRef.current;
+      if (player) {
+        const id = engineTracks[target].youtubeId;
+        const states = window.YT?.PlayerState;
+        const state = player.getPlayerState();
+        const isLoaded = player.getVideoData()?.video_id === id;
+        if (isLoaded && states && state !== states.ENDED) player.playVideo();
+        else player.loadVideoById(id);
+      }
+    },
+    [requestPlayerFrame],
+  );
 
   const pause = useCallback(() => {
     intendRef.current = false;
@@ -270,11 +302,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     }
   }, [pause, play]);
 
-  const requestTrack = useCallback((value: number) => {
-    intendRef.current = true;
-    setPlayerRequested(true);
-    setTrackIndex(value);
-  }, []);
+  const requestTrack = useCallback(
+    (value: number) => {
+      intendRef.current = true;
+      requestPlayerFrame(engineTracks[value].youtubeId);
+      setTrackIndex(value);
+    },
+    [requestPlayerFrame],
+  );
 
   const next = useCallback(() => {
     requestTrack((trackIndexRef.current + 1) % engineTracks.length);
@@ -334,12 +369,26 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   return (
     <PlayerContext.Provider value={value}>
       <div className="contents">{children}</div>
-      <div
-        ref={hostRef}
-        data-youtube-host="true"
-        aria-hidden="true"
-        className="pointer-events-none fixed -left-[9999px] top-0 h-[180px] w-[320px]"
-      />
+      {playerRequested && playerEmbedUrl ? (
+        <iframe
+          ref={hostRef}
+          id="conex-don-youtube-player"
+          data-youtube-host="true"
+          title="Lecteur audio Conex & Don"
+          src={playerEmbedUrl}
+          allow={youtubeIframePermissions}
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+          aria-hidden="true"
+          className="pointer-events-none fixed -left-[9999px] top-0 h-[180px] w-[320px]"
+        />
+      ) : (
+        <div
+          data-youtube-host="true"
+          aria-hidden="true"
+          className="pointer-events-none fixed -left-[9999px] top-0 h-[180px] w-[320px]"
+        />
+      )}
     </PlayerContext.Provider>
   );
 }
@@ -612,6 +661,7 @@ function ListenOverlay() {
     <AnimatePresence>
       {open ? (
         <motion.div
+          key="listen-overlay"
           ref={overlayRef}
           className="listen-overlay fixed inset-0 z-[105] flex flex-col overflow-y-auto bg-ink grain"
           role="dialog"

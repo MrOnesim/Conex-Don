@@ -1,4 +1,6 @@
-const CACHE_NAME = "conex-don-v1";
+// Bump this whenever the application shell changes so returning visitors do not
+// continue running a cached, outdated client bundle.
+const CACHE_NAME = "conex-don-v2";
 const STATIC_ASSETS = [
   "/",
   "/histoire",
@@ -30,7 +32,7 @@ async function activateServiceWorker() {
   await Promise.all(
     cacheNames
       .filter((name) => name !== CACHE_NAME)
-      .map((name) => caches.delete(name))
+      .map((name) => caches.delete(name)),
   );
   self.clients.claim();
 }
@@ -48,22 +50,26 @@ async function handleFetch(event) {
   }
 
   const isApiRequest = url.pathname.startsWith("/api/");
+  const isNavigationRequest = request.mode === "navigate";
   const isImageRequest = request.destination === "image";
   const isFontRequest = request.destination === "font";
   const isStaticAsset = STATIC_ASSETS.some((asset) => url.pathname === asset);
 
-  if (isApiRequest) {
+  // HTML must prefer the network: caching an old App Router payload alongside a
+  // newly deployed client bundle can surface stale hydration diagnostics. The
+  // cached page remains available as an offline fallback through networkFirst.
+  if (isApiRequest || isNavigationRequest) {
     return networkFirstStrategy(request);
   }
 
   if (isImageRequest || isFontRequest || isStaticAsset) {
-    return cacheFirstStrategy(request);
+    return cacheFirstStrategy(request, event);
   }
 
   return networkFirstStrategy(request);
 }
 
-async function cacheFirstStrategy(request) {
+async function cacheFirstStrategy(request, event) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
 
@@ -107,8 +113,7 @@ async function updateCache(request, cache) {
     if (networkResponse.ok) {
       await cache.put(request, networkResponse);
     }
-  } catch {
-  }
+  } catch {}
 }
 
 self.addEventListener("install", (event) => {

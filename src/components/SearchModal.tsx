@@ -281,6 +281,7 @@ export function SearchModal({ onOpen }: { onOpen?: () => void }) {
       <AnimatePresence>
         {isOpen ? (
           <motion.div
+            key="site-search-dialog"
             className="fixed inset-0 z-[110] flex items-start justify-center px-3 pt-[max(4.75rem,10vh)] sm:px-6"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}

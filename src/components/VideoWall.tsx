@@ -206,6 +206,7 @@ export function VideoWall({
       <AnimatePresence>
         {active ? (
           <motion.div
+            key={`video-dialog-${active.slug}`}
             className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-8"
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -261,7 +262,7 @@ export function VideoWall({
                     <iframe
                       src={`https://www.youtube-nocookie.com/embed/${active.youtubeId}?rel=0`}
                       title={`${active.title} — ${active.category}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allow="autoplay; encrypted-media; picture-in-picture"
                       allowFullScreen
                       className="absolute inset-0 h-full w-full"
                     />

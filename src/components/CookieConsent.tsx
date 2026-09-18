@@ -108,6 +108,7 @@ export function CookieConsent() {
     <AnimatePresence>
       {visible ? (
         <motion.aside
+          key="cookie-consent"
           role="region"
           aria-label="Consentement aux cookies"
           className="fixed inset-x-0 bottom-0 z-[95] px-3 pb-20 pt-3 sm:px-5 sm:pb-28 sm:pt-5"

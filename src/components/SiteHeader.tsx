@@ -129,6 +129,7 @@ export function SiteHeader() {
       <AnimatePresence>
         {menu ? (
           <motion.div
+            key="mobile-navigation"
             id="main-mobile-menu"
             ref={menuRef}
             className="fixed inset-0 z-[59] flex flex-col overflow-y-auto bg-ink px-5 pb-5 pt-24 sm:px-8 sm:pt-28 xl:hidden"
