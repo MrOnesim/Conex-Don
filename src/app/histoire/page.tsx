@@ -22,8 +22,8 @@ export default function StoryPage() {
         lead={`${site.tagline} Deux amis d'enfance originaires de Ouidah et d'Avédji, devenus l'un des duos les plus reconnaissables de la nouvelle scène musicale béninoise.`}
       />
 
-      <section className="border-b border-bone/10 bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+      <section className="route-section">
+        <div className="route-frame">
           <RevealWords
             text="Tout a commencé par des freestyles."
             className="display-xl max-w-5xl text-[12vw] leading-[0.86] sm:text-7xl lg:text-[6.5rem]"
@@ -71,8 +71,8 @@ export default function StoryPage() {
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+      <section className="route-section route-section--soft">
+        <div className="route-frame">
           <div className="mb-14 flex flex-wrap items-end justify-between gap-6 border-b border-bone/12 pb-6">
             <h2 className="display-xl text-[12vw] leading-[0.86] sm:text-6xl lg:text-7xl">
               LA TIMELINE

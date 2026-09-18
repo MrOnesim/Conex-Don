@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+
+import { FormFeedback, FormSubmitButton, type SubmissionState } from "@/components/FormSubmitButton";
 
 const eventTypes = [
   "Concert / show",
@@ -13,36 +15,109 @@ const eventTypes = [
   "Autre",
 ];
 
-const field =
-  "w-full border border-bone/20 bg-transparent px-4 py-3 text-sm text-bone outline-none transition-colors placeholder:text-bone/30 focus:border-gold";
-const label = "eyebrow text-bone/40";
+const emptyForm = {
+  name: "",
+  organization: "",
+  email: "",
+  phone: "",
+  country: "",
+  city: "",
+  eventType: eventTypes[0],
+  eventDate: "",
+  capacity: "",
+  budget: "",
+  message: "",
+};
+
+type BookingValues = typeof emptyForm;
+type FieldName = keyof BookingValues;
+type Touched = Partial<Record<FieldName, boolean>>;
+
+function validationError(key: FieldName, value: string) {
+  if (key === "name" && !value.trim()) return "Indiquez votre nom pour que l'équipe puisse vous répondre.";
+  if (key === "email") {
+    if (!value.trim()) return "Indiquez une adresse email de contact.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) return "Cette adresse email semble incomplète.";
+  }
+  if (key === "message" && !value.trim()) return "Ajoutez quelques détails sur votre événement.";
+  return "";
+}
+
+function Field({
+  id,
+  label,
+  required = false,
+  error,
+  valid,
+  children,
+}: {
+  id: string;
+  label: string;
+  required?: boolean;
+  error: string;
+  valid: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="field-wrap" data-valid={valid ? "true" : "false"}>
+      <label className="field-label" htmlFor={id}>
+        {label}
+        {required ? <span className="field-label__required" aria-hidden="true">*</span> : null}
+      </label>
+      {children}
+      <p id={`${id}-error`} className="field-message" aria-live="polite">
+        {error}
+      </p>
+    </div>
+  );
+}
 
 export function BookingForm() {
-  const [form, setForm] = useState({
-    name: "",
-    organization: "",
-    email: "",
-    phone: "",
-    country: "",
-    city: "",
-    eventType: eventTypes[0],
-    eventDate: "",
-    capacity: "",
-    budget: "",
-    message: "",
-  });
-  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [form, setForm] = useState<BookingValues>(emptyForm);
+  const [touched, setTouched] = useState<Touched>({});
+  const [state, setState] = useState<SubmissionState>("idle");
   const [feedback, setFeedback] = useState("");
   const [reference, setReference] = useState<string | null>(null);
 
-  function update(key: keyof typeof form, value: string) {
+  const errors = useMemo(
+    () =>
+      Object.fromEntries(
+        (Object.keys(form) as FieldName[]).map((key) => [
+          key,
+          touched[key] ? validationError(key, form[key]) : "",
+        ]),
+      ) as Record<FieldName, string>,
+    [form, touched],
+  );
+
+  function update(key: FieldName, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    if (state !== "idle") setState("idle");
+    if (feedback) setFeedback("");
   }
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function markTouched(key: FieldName) {
+    setTouched((prev) => ({ ...prev, [key]: true }));
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const nextTouched = Object.fromEntries(
+      (Object.keys(form) as FieldName[]).map((key) => [key, true]),
+    ) as Touched;
+    setTouched(nextTouched);
+
+    const firstInvalid = (Object.keys(form) as FieldName[]).find((key) => validationError(key, form[key]));
+    if (firstInvalid) {
+      setState("error");
+      setFeedback("Vérifiez les champs signalés avant d'envoyer votre demande.");
+      document.getElementById(`bk-${firstInvalid}`)?.focus();
+      return;
+    }
+
     setState("loading");
     setFeedback("");
+    setReference(null);
     try {
       const response = await fetch("/api/booking", {
         method: "POST",
@@ -54,21 +129,10 @@ export function BookingForm() {
       setState("done");
       setReference(data.reference ?? null);
       setFeedback(
-        "Demande enregistrée. L'équipe revient vers vous rapidement — merci de préciser toute information complémentaire par email.",
+        "Demande enregistrée. L'équipe revient vers vous rapidement — vous pouvez ajouter des précisions par email.",
       );
-      setForm({
-        name: "",
-        organization: "",
-        email: "",
-        phone: "",
-        country: "",
-        city: "",
-        eventType: eventTypes[0],
-        eventDate: "",
-        capacity: "",
-        budget: "",
-        message: "",
-      });
+      setForm(emptyForm);
+      setTouched({});
     } catch (error) {
       setState("error");
       setFeedback(
@@ -79,93 +143,85 @@ export function BookingForm() {
     }
   }
 
+  const fieldProps = (key: FieldName) => ({
+    onBlur: () => markTouched(key),
+    "aria-invalid": Boolean(errors[key]),
+    "aria-describedby": errors[key] ? `bk-${key}-error` : undefined,
+  });
+
   return (
-    <form onSubmit={onSubmit} className="space-y-5">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label className={label} htmlFor="bk-name">
-            Nom *
-          </label>
+    <form noValidate onSubmit={onSubmit} className="space-y-5">
+      <div className="grid grid-cols-1 gap-x-5 gap-y-1 sm:grid-cols-2">
+        <Field id="bk-name" label="Nom" required error={errors.name} valid={Boolean(touched.name && form.name && !errors.name)}>
           <input
             id="bk-name"
-            required
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="Nom et prénom"
+            autoComplete="name"
+            {...fieldProps("name")}
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-org">
-            Organisation
-          </label>
+        </Field>
+        <Field id="bk-organization" label="Organisation" error="" valid={false}>
           <input
-            id="bk-org"
+            id="bk-organization"
             value={form.organization}
             onChange={(event) => update("organization", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="Structure, label, marque"
+            autoComplete="organization"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-email">
-            Email *
-          </label>
+        </Field>
+        <Field id="bk-email" label="Email" required error={errors.email} valid={Boolean(touched.email && form.email && !errors.email)}>
           <input
             id="bk-email"
             type="email"
-            required
             value={form.email}
             onChange={(event) => update("email", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="vous@structure.com"
+            autoComplete="email"
+            {...fieldProps("email")}
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-phone">
-            Téléphone
-          </label>
+        </Field>
+        <Field id="bk-phone" label="Téléphone" error="" valid={false}>
           <input
             id="bk-phone"
+            type="tel"
             value={form.phone}
             onChange={(event) => update("phone", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="+229 …"
+            autoComplete="tel"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-country">
-            Pays
-          </label>
+        </Field>
+        <Field id="bk-country" label="Pays" error="" valid={false}>
           <input
             id="bk-country"
             value={form.country}
             onChange={(event) => update("country", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="Bénin"
+            autoComplete="country-name"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-city">
-            Ville
-          </label>
+        </Field>
+        <Field id="bk-city" label="Ville" error="" valid={false}>
           <input
             id="bk-city"
             value={form.city}
             onChange={(event) => update("city", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="Cotonou"
+            autoComplete="address-level2"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-type">
-            Type d&apos;événement
-          </label>
+        </Field>
+        <Field id="bk-eventType" label="Type d'événement" error="" valid={false}>
           <select
-            id="bk-type"
+            id="bk-eventType"
             value={form.eventType}
             onChange={(event) => update("eventType", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
           >
             {eventTypes.map((type) => (
               <option key={type} value={type} className="bg-ink">
@@ -173,84 +229,65 @@ export function BookingForm() {
               </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-date">
-            Date envisagée
-          </label>
+        </Field>
+        <Field id="bk-eventDate" label="Date envisagée" error="" valid={false}>
           <input
-            id="bk-date"
+            id="bk-eventDate"
             type="date"
             value={form.eventDate}
             onChange={(event) => update("eventDate", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-capacity">
-            Capacité / jauge
-          </label>
+        </Field>
+        <Field id="bk-capacity" label="Capacité / jauge" error="" valid={false}>
           <input
             id="bk-capacity"
             value={form.capacity}
             onChange={(event) => update("capacity", event.target.value)}
-            className={`mt-2 ${field}`}
+            className="field-control"
             placeholder="2 000 places"
           />
-        </div>
-        <div>
-          <label className={label} htmlFor="bk-budget">
-            Budget indicatif
-          </label>
+        </Field>
+        <Field id="bk-budget" label="Budget indicatif" error="" valid={false}>
           <input
             id="bk-budget"
             value={form.budget}
             onChange={(event) => update("budget", event.target.value)}
-            className={`mt-2 ${field}`}
-            placeholder="à préciser / fourchette FCFA"
+            className="field-control"
+            placeholder="À préciser / fourchette FCFA"
           />
-        </div>
+        </Field>
       </div>
 
-      <div>
-        <label className={label} htmlFor="bk-message">
-          Message *
-        </label>
+      <Field id="bk-message" label="Message" required error={errors.message} valid={Boolean(touched.message && form.message && !errors.message)}>
         <textarea
           id="bk-message"
-          required
           rows={5}
           value={form.message}
           onChange={(event) => update("message", event.target.value)}
-          className={`mt-2 ${field}`}
+          className="field-control"
           placeholder="Contexte, ligne d'affichage, conditions techniques, attentes…"
+          {...fieldProps("message")}
         />
-      </div>
+      </Field>
 
-      <div className="flex flex-wrap items-center gap-5 border-t border-bone/12 pt-6">
-        <button
-          type="submit"
-          disabled={state === "loading"}
-          className="bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold disabled:opacity-50"
-        >
-          {state === "loading" ? "Envoi…" : "Envoyer une demande de booking"}
-        </button>
-        {state === "done" ? (
-          <p className="text-xs text-gold" role="status">
-            {feedback}
-            {reference ? ` Référence : ${reference}.` : ""}
-          </p>
-        ) : null}
-        {state === "error" ? (
-          <p className="text-xs text-clay" role="alert">
-            {feedback}
-          </p>
-        ) : null}
+      <div className="flex flex-col gap-4 border-t border-bone/12 pt-6 sm:flex-row sm:items-center">
+        <FormSubmitButton
+          state={state}
+          idleLabel="Envoyer la demande"
+          loadingLabel="Transmission…"
+          doneLabel="Demande envoyée"
+        />
         {state === "idle" ? (
-          <p className="text-xs text-bone/40">
+          <p className="max-w-md text-xs leading-relaxed text-bone/40">
             Les demandes sont enregistrées puis transmises à l&apos;équipe booking.
           </p>
-        ) : null}
+        ) : (
+          <FormFeedback state={state}>
+            {feedback}
+            {reference ? ` Référence : ${reference}.` : ""}
+          </FormFeedback>
+        )}
       </div>
     </form>
   );

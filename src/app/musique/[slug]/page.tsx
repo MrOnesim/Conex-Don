@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -19,7 +18,9 @@ export const dynamic = "force-dynamic";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const data = await getRelease(slug);
   if (!data) return { title: "Projet introuvable" };
@@ -74,7 +75,10 @@ export default async function ReleasePage({ params }: PageProps) {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Accueil", url: "https://conexetdon.com" },
     { name: "Musique", url: "https://conexetdon.com/musique" },
-    { name: release.title, url: `https://conexetdon.com/musique/${release.slug}` },
+    {
+      name: release.title,
+      url: `https://conexetdon.com/musique/${release.slug}`,
+    },
   ]);
   const websiteSchema = generateWebsiteSchema();
 
@@ -93,16 +97,13 @@ export default async function ReleasePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
 
-      <article className="pt-24 sm:pt-32">
-        <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <Link
-            href="/musique"
-            className="link-underline text-[10px] uppercase tracking-[0.22em] text-bone/50 hover:text-bone"
-          >
+      <article className="release-detail pt-24 sm:pt-32">
+        <div className="release-detail__frame mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
+          <Link href="/musique" className="route-link">
             ← Discographie
           </Link>
 
-          <header className="mt-8 grid grid-cols-1 gap-10 border-b border-bone/12 pb-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-16">
+          <header className="release-detail__hero mt-8 grid grid-cols-1 gap-10 border-b border-bone/12 pb-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-16">
             <Reveal variant="mask">
               <div className="relative aspect-square w-full overflow-hidden border border-bone/15">
                 {release.coverImage ? (
@@ -141,7 +142,9 @@ export default async function ReleasePage({ params }: PageProps) {
                   {release.releaseDate ?? release.year}
                 </span>
                 {release.duration ? (
-                  <span className="eyebrow text-bone/45">{release.duration}</span>
+                  <span className="eyebrow text-bone/45">
+                    {release.duration}
+                  </span>
                 ) : null}
               </div>
 
@@ -166,7 +169,8 @@ export default async function ReleasePage({ params }: PageProps) {
                   className="border border-bone/25 px-5 py-3"
                 />
                 <p className="max-w-sm text-xs leading-relaxed text-bone/40">
-                  Le titre officiel se lance directement ici, dans le lecteur intégré du site.
+                  Le titre officiel se lance directement ici, dans le lecteur
+                  intégré du site.
                 </p>
               </div>
             </div>
@@ -185,24 +189,27 @@ export default async function ReleasePage({ params }: PageProps) {
                   href={release.links.youtube}
                   target="_blank"
                   rel="noreferrer"
-                  className="link-underline text-[10px] uppercase tracking-[0.22em] text-bone/50 hover:text-bone"
+                  className="route-link"
                 >
                   Voir sur YouTube →
                 </a>
               </div>
-              <YouTubeEmbed youtubeId={release.links.youtubeId} title={release.title} />
+              <YouTubeEmbed
+                youtubeId={release.links.youtubeId}
+                title={release.title}
+              />
             </section>
           ) : null}
 
-          <section className="grid grid-cols-1 gap-10 py-14 lg:grid-cols-[minmax(0,0.58fr)_minmax(0,0.42fr)] lg:gap-16">
+          <section className="release-detail__tracks grid grid-cols-1 gap-10 py-14 lg:grid-cols-[minmax(0,0.58fr)_minmax(0,0.42fr)] lg:gap-16">
             <div>
               <h2 className="display-xl text-3xl sm:text-4xl">Tracklist</h2>
-              <ol className="mt-6 divide-y divide-bone/10 border-t border-bone/12">
+              <ol className="editorial-list mt-6">
                 {tracks.map((track) => (
                   <li
                     key={`${track.position}-${track.title}`}
                     id={track.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
-                    className="group flex items-center gap-4 py-4"
+                    className="editorial-row group flex items-center gap-4 py-4"
                   >
                     <span className="w-7 text-[11px] tabular-nums text-bone/35">
                       {String(track.position).padStart(2, "0")}
@@ -217,7 +224,9 @@ export default async function ReleasePage({ params }: PageProps) {
                         </span>
                       ) : null}
                       {track.note ? (
-                        <span className="mt-1 block text-[11px] text-bone/40">{track.note}</span>
+                        <span className="mt-1 block text-[11px] text-bone/40">
+                          {track.note}
+                        </span>
                       ) : null}
                     </span>
                     <span className="text-[11px] tabular-nums text-bone/35">
@@ -228,38 +237,60 @@ export default async function ReleasePage({ params }: PageProps) {
               </ol>
             </div>
 
-            <aside className="border border-bone/12 p-6 sm:p-8">
+            <aside className="editorial-panel editorial-panel--padded border-l-2 border-gold">
               <h2 className="display-xl text-2xl sm:text-3xl">Crédits</h2>
               <dl className="mt-6 space-y-4 text-sm">
                 {[
                   { label: "Artiste", value: "Conex & Don" },
-                  { label: "Type", value: kindLabel[release.kind] ?? release.kind },
-                  { label: "Sortie", value: release.releaseDate ?? String(release.year) },
+                  {
+                    label: "Type",
+                    value: kindLabel[release.kind] ?? release.kind,
+                  },
+                  {
+                    label: "Sortie",
+                    value: release.releaseDate ?? String(release.year),
+                  },
                   { label: "Titres", value: String(release.trackCount) },
-                  { label: "Label / distribution", value: release.label ?? "—" },
-                  { label: "Genres", value: "Afrobeat · Afropop · Amapiano · Rap" },
+                  {
+                    label: "Label / distribution",
+                    value: release.label ?? "—",
+                  },
+                  {
+                    label: "Genres",
+                    value: "Afrobeat · Afropop · Amapiano · Rap",
+                  },
                 ].map((item) => (
-                  <div key={item.label} className="flex justify-between gap-6 border-b border-bone/10 pb-3">
+                  <div
+                    key={item.label}
+                    className="flex justify-between gap-6 border-b border-bone/10 pb-3"
+                  >
                     <dt className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
                       {item.label}
                     </dt>
-                    <dd className="max-w-[60%] text-right text-bone/80">{item.value}</dd>
+                    <dd className="max-w-[60%] text-right text-bone/80">
+                      {item.value}
+                    </dd>
                   </div>
                 ))}
               </dl>
               <p className="mt-6 text-xs leading-relaxed text-bone/40">
-                Crédits détaillés, producteurs et réalisateurs disponibles sur demande auprès de
-                l&apos;équipe — voir la page EPK.
+                Crédits détaillés, producteurs et réalisateurs disponibles sur
+                demande auprès de l&apos;équipe — voir la page EPK.
               </p>
             </aside>
           </section>
 
           <section className="border-t border-bone/12 py-14">
-            <h2 className="display-xl text-2xl sm:text-3xl">Dans la même discographie</h2>
+            <h2 className="display-xl text-2xl sm:text-3xl">
+              Dans la même discographie
+            </h2>
             <ul className="mt-8 grid grid-cols-2 gap-px border border-bone/12 bg-bone/12 lg:grid-cols-4">
               {others.map((item) => (
-                <li key={item.slug} className="bg-ink">
-                  <Link href={`/musique/${item.slug}`} className="group block p-5">
+                <li key={item.slug} className="editorial-row bg-ink">
+                  <Link
+                    href={`/musique/${item.slug}`}
+                    className="group block p-5"
+                  >
                     <span className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
                       {item.year} · {kindLabel[item.kind] ?? item.kind}
                     </span>

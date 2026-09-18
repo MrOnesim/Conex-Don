@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { openCookiePreferences } from "@/lib/cookie-consent";
 
 export function CookiePreferencesButton({
@@ -7,7 +9,7 @@ export function CookiePreferencesButton({
   children = "Gestion des cookies",
 }: {
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <button

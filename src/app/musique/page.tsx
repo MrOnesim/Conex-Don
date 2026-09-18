@@ -39,8 +39,8 @@ export default async function MusicPage() {
         </VelocitySkew>
       </div>
 
-      <section className="bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
+      <section className="route-section">
+        <div className="route-frame route-frame--compact">
           <ReleaseGrid releases={releases} />
         </div>
       </section>

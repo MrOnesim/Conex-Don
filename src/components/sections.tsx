@@ -4,7 +4,14 @@ import Link from "next/link";
 import { ListenTrigger } from "@/components/ListenRow";
 import { VelocitySkew } from "@/components/VelocitySkew";
 import { Reveal, RevealWords } from "@/components/Reveal";
-import { CTA, Kicker, Marquee, SectionHead, Stat, StreamingLinks } from "@/components/ui";
+import {
+  CTA,
+  Kicker,
+  Marquee,
+  SectionHead,
+  Stat,
+  StreamingLinks,
+} from "@/components/ui";
 import { awards, duo, heritage, site, stats, timeline } from "@/content/site";
 import type { EventView, NewsView, ReleaseView, TrackView } from "@/lib/data";
 
@@ -13,7 +20,10 @@ import type { EventView, NewsView, ReleaseView, TrackView } from "@/lib/data";
 export function StoryTeaser() {
   const first = timeline[0];
   return (
-    <section id="histoire" className="relative border-b border-bone/10 bg-ink grain">
+    <section
+      id="histoire"
+      className="relative border-b border-bone/10 bg-ink grain"
+    >
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-28">
         <div>
           <Kicker color="text-gold">01 — L&apos;histoire</Kicker>
@@ -23,12 +33,10 @@ export function StoryTeaser() {
           />
           <Reveal delay={120} className="mt-8">
             <div className="max-w-lg space-y-4 text-[15px] leading-relaxed text-bone/70">
-              <p>
-                {first.body.split("\n\n")[0]}
-              </p>
+              <p>{first.body.split("\n\n")[0]}</p>
               <p className="text-bone/55">
-                Avant les albums, il y a eu des téléphones, des cours de maison et le quotidien
-                béninois filmé à hauteur d&apos;homme.
+                Avant les albums, il y a eu des téléphones, des cours de maison
+                et le quotidien béninois filmé à hauteur d&apos;homme.
               </p>
             </div>
           </Reveal>
@@ -48,13 +56,12 @@ export function StoryTeaser() {
               sizes="(max-width: 1024px) 90vw, 45vw"
               className="object-cover duotone opacity-90"
             />
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"
-              aria-hidden="true"
-            />
+            <div className="absolute inset-0 bg-ink/45" aria-hidden="true" />
             <div className="absolute bottom-0 left-0 bg-ink/85 px-5 py-4">
               <p className="eyebrow text-gold">2022</p>
-              <p className="mt-1 text-xs text-bone/60">TikTok · freestyles · deux amis d&apos;enfance</p>
+              <p className="mt-1 text-xs text-bone/60">
+                TikTok · freestyles · deux amis d&apos;enfance
+              </p>
             </div>
           </div>
         </Reveal>
@@ -96,7 +103,7 @@ export function SymphonieScore({
                 alt={`Couverture — ${release.title}`}
                 fill
                 sizes="(max-width: 1024px) 90vw, 30vw"
-                className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 img-zoom"
+                className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
               />
               <span className="absolute bottom-3 left-3 bg-ink/85 px-3 py-2 text-[9px] uppercase tracking-[0.2em] text-bone/70">
                 {release.trackCount} pistes · {release.year}
@@ -175,16 +182,19 @@ export function ModeAvionRail({
           </div>
           <Reveal variant="wipe" className="lg:pt-16">
             <p className="max-w-xl text-[15px] leading-relaxed text-ink/75">
-              Sept titres, un mouvement : partir, couper le monde quelques heures, puis percer.
-              Classé Afrobeat / Afrosounds par les plateformes, MODE AVION est le projet le plus
-              urbain du duo.
+              Sept titres, un mouvement : partir, couper le monde quelques
+              heures, puis percer. Classé Afrobeat / Afrosounds par les
+              plateformes, MODE AVION est le projet le plus urbain du duo.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href={`/musique/${release.slug}`}
-                className="inline-block bg-ink px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-bone transition-colors hover:bg-clay"
+                className="button button--ink"
               >
-                Voir le projet
+                <span className="button__label">Voir le projet</span>
+                <span className="button__arrow" aria-hidden="true">
+                  →
+                </span>
               </Link>
               <StreamingLinks links={release.links} compact />
             </div>
@@ -195,10 +205,11 @@ export function ModeAvionRail({
       <div className="no-scrollbar overflow-x-auto pb-16 lg:pb-24">
         <div className="flex items-stretch gap-0 px-5 sm:px-8 lg:px-12">
           {tracks.map((track, index) => (
-            <div
+            <Link
               key={track.title}
+              href={`/musique/${release.slug}#${track.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
               className="group relative flex w-[74vw] shrink-0 flex-col justify-between overflow-hidden border-l border-ink/15 px-5 py-8 transition-colors duration-500 hover:bg-ink hover:text-bone sm:w-[38vw] lg:w-[24vw]"
-              data-cursor="On écoute ?"
+              data-cursor="Ouvrir"
             >
               <div
                 className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-25"
@@ -227,11 +238,16 @@ export function ModeAvionRail({
               </span>
               <span className="relative z-10 flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-[0.2em] text-ink/45 group-hover:text-bone/50">
-                  Mode avion — {index === 0 ? "décollage" : index === tracks.length - 1 ? "atterrissage" : "en vol"}
+                  Mode avion —{" "}
+                  {index === 0
+                    ? "décollage"
+                    : index === tracks.length - 1
+                      ? "atterrissage"
+                      : "en vol"}
                 </span>
                 <span className="text-lg">→</span>
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -269,28 +285,30 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
             <blockquote className="mt-10 max-w-xl border-l-2 border-gold pl-6">
               <p
                 className="text-2xl leading-tight text-bone sm:text-3xl"
-                style={{ fontFamily: "var(--font-serif-display)", fontStyle: "italic" }}
+                style={{
+                  fontFamily: "var(--font-serif-display)",
+                  fontStyle: "italic",
+                }}
               >
                 « {heritage.quote} »
               </p>
             </blockquote>
             <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-bone/65">
-              Quatre séquences traversent la mémoire collective, la résilience, l&apos;amour, la
-              spiritualité, la vigilance et la gratitude. Le duo ne raconte plus seulement le
-              quotidien : il transmet.
+              Quatre séquences traversent la mémoire collective, la résilience,
+              l&apos;amour, la spiritualité, la vigilance et la gratitude. Le
+              duo ne raconte plus seulement le quotidien : il transmet.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <CTA href="/musique/heritage-vivant-live" tone="gold">
                 Découvrir le projet
               </CTA>
-              <a
+              <CTA
                 href="https://www.youtube.com/watch?v=oGZLv0Vc7aU"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-3 border border-bone/30 px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.24em] transition-colors hover:border-gold hover:text-gold"
+                tone="outline"
+                external
               >
                 Voir la live expérience
-              </a>
+              </CTA>
             </div>
           </div>
 
@@ -303,11 +321,12 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
                 style={{ top: `${104 + position * 26}px` }}
               >
                 <Reveal delay={position * 60}>
-                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] sm:gap-7 sm:p-7 animate-in fade-in slide-in-from-bottom-5 duration-200">
+                  <article className="interactive-panel group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 sm:gap-7 sm:p-7">
                     <span
                       className="absolute inset-y-0 left-0 w-[3px]"
                       style={{
-                        backgroundColor: sequenceAccents[position % sequenceAccents.length],
+                        backgroundColor:
+                          sequenceAccents[position % sequenceAccents.length],
                       }}
                       aria-hidden="true"
                     />
@@ -318,7 +337,7 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
                           alt=""
                           fill
                           sizes="112px"
-                          className="object-cover duotone transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0 group-hover:translate-y-[-4px]_group-hover:shadow-[0_-12px_32px_rgba(0,0,0,0.4)]"
+                          className="object-cover duotone transition-[filter,transform] duration-700 group-hover:scale-110 group-hover:grayscale-0"
                         />
                       </span>
                     ) : null}
@@ -375,7 +394,9 @@ export function LatestRelease({ release }: { release: ReleaseView }) {
           <h2 className="display-xl mt-5 text-[clamp(2rem,11vw,3.5rem)] leading-[0.84] sm:text-6xl lg:text-[clamp(3rem,5.4rem,4.5rem)]">
             {release.title}
           </h2>
-          <p className="mt-5 text-sm uppercase tracking-[0.2em] text-bone/55">{release.tagline}</p>
+          <p className="mt-5 text-sm uppercase tracking-[0.2em] text-bone/55">
+            {release.tagline}
+          </p>
           <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-bone/70">
             {release.longDescription ?? release.description}
           </p>
@@ -422,10 +443,13 @@ export function DuoSection({ index = "06" }: { index?: string }) {
                       alt={`${member.name} — ${member.fullName}`}
                       fill
                       sizes="(max-width: 1024px) 92vw, 45vw"
-                      className="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0 img-zoom"
+                      className="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+                    <div
+                      className="absolute inset-0 flex items-center justify-center"
+                      aria-hidden="true"
+                    >
                       <span
                         className="display-xl text-[clamp(5rem,9rem,6rem)] leading-none opacity-25"
                         style={{ color: member.accent }}
@@ -447,7 +471,9 @@ export function DuoSection({ index = "06" }: { index?: string }) {
                 </div>
                 <div className="flex flex-1 flex-col p-6 sm:p-8">
                   <p className="eyebrow text-bone/40">{member.origin}</p>
-                  <h3 className="display-xl mt-3 text-5xl sm:text-6xl">{member.name}</h3>
+                  <h3 className="display-xl mt-3 text-5xl sm:text-6xl">
+                    {member.name}
+                  </h3>
                   <p className="mt-2 text-sm text-bone/50">{member.fullName}</p>
                   <p className="mt-5 flex-1 text-[15px] leading-relaxed text-bone/70">
                     {member.bio}
@@ -504,9 +530,17 @@ export function StatsBand() {
 
 /* ------------------------------------------------------------------- live */
 
-export function LiveBanner({ events, index = "07" }: { events: EventView[]; index?: string }) {
+export function LiveBanner({
+  events,
+  index = "07",
+}: {
+  events: EventView[];
+  index?: string;
+}) {
   const upcoming = events.filter((event) => event.status === "upcoming");
-  const archives = events.filter((event) => event.status !== "upcoming").slice(0, 3);
+  const archives = events
+    .filter((event) => event.status !== "upcoming")
+    .slice(0, 3);
   const hero = upcoming[0] ?? archives[0];
 
   if (!hero) return null;
@@ -539,7 +573,9 @@ export function LiveBanner({ events, index = "07" }: { events: EventView[]; inde
                 </div>
               ))}
             </dl>
-            <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-bone/65">{hero.note}</p>
+            <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-bone/65">
+              {hero.note}
+            </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <CTA href="/live" tone="solid">
                 Page live
@@ -597,7 +633,12 @@ export function NewsGrid({
         />
         <ul className="mt-14 grid grid-cols-1 gap-px border border-bone/12 bg-bone/12 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((post, index) => (
-            <Reveal as="li" key={post.slug} delay={index * 60} className="bg-ink">
+            <Reveal
+              as="li"
+              key={post.slug}
+              delay={index * 60}
+              className="bg-ink"
+            >
               <Link
                 href={`/press/${post.slug}`}
                 className="group flex h-full flex-col justify-between p-6 transition-colors duration-500 hover:bg-bone hover:text-ink sm:p-8"
@@ -619,7 +660,10 @@ export function NewsGrid({
                   </p>
                 </div>
                 <span className="mt-8 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-bone/45 group-hover:text-clay">
-                  Lire <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
+                  Lire{" "}
+                  <span className="transition-transform duration-500 group-hover:translate-x-1">
+                    →
+                  </span>
                 </span>
               </Link>
             </Reveal>
@@ -649,8 +693,9 @@ export function BookingCta({ index = "09" }: { index?: string }) {
               BOOK CONEX &amp; DON
             </h2>
             <p className="mt-7 max-w-xl text-[15px] leading-relaxed text-bone/80">
-              Concerts, festivals, showcases, activations de marque, partenariats et médias.
-              Envoyez les détails de votre projet : date, ville, capacité, type d&apos;événement.
+              Concerts, festivals, showcases, activations de marque,
+              partenariats et médias. Envoyez les détails de votre projet :
+              date, ville, capacité, type d&apos;événement.
             </p>
           </div>
           <div className="flex flex-col justify-end gap-5">
@@ -683,20 +728,20 @@ export function MarqueeBand() {
   return (
     <div className="border-y border-bone/12 bg-ink py-5">
       <VelocitySkew>
-      <Marquee
-        items={[
-          "AFROBEAT",
-          "AMAPIANO",
-          "RAP",
-          "HUMOUR",
-          "CULTURE BÉNINOISE",
-          "STORYTELLING",
-          "RÉALITÉ",
-          "HÉRITAGE",
-        ]}
-        className="display-xl text-3xl text-bone/25 sm:text-5xl"
-        separator="·"
-      />
+        <Marquee
+          items={[
+            "AFROBEAT",
+            "AMAPIANO",
+            "RAP",
+            "HUMOUR",
+            "CULTURE BÉNINOISE",
+            "STORYTELLING",
+            "RÉALITÉ",
+            "HÉRITAGE",
+          ]}
+          className="display-xl text-3xl text-bone/25 sm:text-5xl"
+          separator="·"
+        />
       </VelocitySkew>
     </div>
   );

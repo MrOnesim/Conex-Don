@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EmptyState } from "@/components/EmptyState";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Reveal } from "@/components/Reveal";
@@ -46,7 +47,10 @@ function generateEventSchema(events: Awaited<ReturnType<typeof getEvents>>) {
         "@type": "MusicEvent",
         name: event.title,
         startDate: event.eventDate ?? undefined,
-        eventStatus: event.status === "upcoming" ? "https://schema.org/EventScheduled" : "https://schema.org/EventCompleted",
+        eventStatus:
+          event.status === "upcoming"
+            ? "https://schema.org/EventScheduled"
+            : "https://schema.org/EventCompleted",
         location: {
           "@type": "Place",
           name: event.venue ?? undefined,
@@ -63,7 +67,9 @@ function generateEventSchema(events: Awaited<ReturnType<typeof getEvents>>) {
           name: "Conex et Don",
           url: "https://conexetdon.com",
         },
-        ...(event.ticketUrl ? { offers: { "@type": "Offer", url: event.ticketUrl } } : {}),
+        ...(event.ticketUrl
+          ? { offers: { "@type": "Offer", url: event.ticketUrl } }
+          : {}),
       },
     })),
   };
@@ -93,8 +99,8 @@ export default async function LivePage() {
       />
 
       {hero ? (
-        <section className="border-b border-bone/10 bg-ink">
-          <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-16 lg:px-12 lg:py-24">
+        <section className="route-section">
+          <div className="route-frame grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-16">
             <div>
               <span className="flex items-center gap-3 eyebrow text-clay">
                 <span className="live-dot block h-2 w-2 rounded-full bg-clay" />
@@ -116,7 +122,9 @@ export default async function LivePage() {
                   </div>
                 ))}
               </dl>
-              <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-bone/70">{hero.note}</p>
+              <p className="mt-8 max-w-xl text-[15px] leading-relaxed text-bone/70">
+                {hero.note}
+              </p>
             </div>
 
             <Reveal variant="mask">
@@ -132,11 +140,12 @@ export default async function LivePage() {
                 />
                 <div className="absolute inset-0 bg-ink/25" />
               </div>
-              <div className="mt-6 border border-bone/12 p-6">
+              <div className="editorial-panel editorial-panel--padded mt-6 border-l-2 border-forest">
                 <Kicker>Billetterie</Kicker>
                 <p className="mt-3 text-sm leading-relaxed text-bone/65">
-                  La billetterie n&apos;est pas encore ouverte. Inscrivez-vous à la liste ALOBA :
-                  vous recevrez la date, le lieu et le lien de réservation en premier.
+                  La billetterie n&apos;est pas encore ouverte. Inscrivez-vous à
+                  la liste ALOBA : vous recevrez la date, le lieu et le lien de
+                  réservation en premier.
                 </p>
                 <div className="mt-5">
                   <NewsletterForm />
@@ -145,10 +154,26 @@ export default async function LivePage() {
             </Reveal>
           </div>
         </section>
-      ) : null}
+      ) : (
+        <section className="route-section">
+          <div className="route-frame route-frame--compact">
+            <EmptyState
+              compact
+              eyebrow="Agenda live"
+              title="La prochaine date arrive bientôt"
+              description="Aucune nouvelle date n'est annoncée pour le moment. Inscrivez-vous à la liste ALOBA pour recevoir l'information en premier."
+              action={
+                <CTA href="/aloba" tone="outline">
+                  Rejoindre ALOBA
+                </CTA>
+              }
+            />
+          </div>
+        </section>
+      )}
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+      <section className="route-section route-section--soft">
+        <div className="route-frame">
           <div className="flex flex-wrap items-end justify-between gap-6 border-b border-bone/12 pb-6">
             <h2 className="display-xl text-[12vw] leading-[0.86] sm:text-6xl lg:text-7xl">
               ARCHIVES
@@ -158,34 +183,49 @@ export default async function LivePage() {
             </p>
           </div>
 
-          <ul className="mt-10 grid grid-cols-1 gap-px border border-bone/12 bg-bone/12 sm:grid-cols-2">
-            {archives.map((event) => (
-              <li key={event.title} className="bg-ink">
-                <div className="group relative aspect-16/10 w-full overflow-hidden">
-                  <OptimizedImage
-                    src={event.image ?? "/images/SYMPHONIE-BÉNINOISE.webp"}
-                    alt={`${event.title} — ${event.city}`}
-                    fill
-                    accent="#9E382C"
-                    sizes="(max-width: 640px) 92vw, 46vw"
-                    className="h-full w-full"
-                    imageClassName="object-cover duotone transition-all duration-[1200ms] group-hover:scale-105 group-hover:grayscale-0"
-                  />
-                  <div className="absolute inset-0 bg-ink/35" />
-                  <span className="absolute left-4 top-4 bg-ink/85 px-3 py-1.5 text-[9px] uppercase tracking-[0.2em] text-bone/80">
-                    {event.eventDate}
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="display-xl text-2xl sm:text-3xl">{event.title}</h3>
-                  <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-bone/45">
-                    {event.venue} · {event.city} · {event.country}
-                  </p>
-                  <p className="mt-4 text-sm leading-relaxed text-bone/65">{event.note}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {archives.length > 0 ? (
+            <ul className="mt-10 grid grid-cols-1 gap-px border border-bone/12 bg-bone/12 sm:grid-cols-2">
+              {archives.map((event) => (
+                <li key={event.title} className="editorial-row bg-ink">
+                  <div className="group relative aspect-16/10 w-full overflow-hidden">
+                    <OptimizedImage
+                      src={event.image ?? "/images/SYMPHONIE-BÉNINOISE.webp"}
+                      alt={`${event.title} — ${event.city}`}
+                      fill
+                      accent="#9E382C"
+                      sizes="(max-width: 640px) 92vw, 46vw"
+                      className="h-full w-full"
+                      imageClassName="object-cover duotone transition-all duration-[1200ms] group-hover:scale-105 group-hover:grayscale-0"
+                    />
+                    <div className="absolute inset-0 bg-ink/35" />
+                    <span className="absolute left-4 top-4 bg-ink/85 px-3 py-1.5 text-[9px] uppercase tracking-[0.2em] text-bone/80">
+                      {event.eventDate}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="display-xl text-2xl sm:text-3xl">
+                      {event.title}
+                    </h3>
+                    <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-bone/45">
+                      {event.venue} · {event.city} · {event.country}
+                    </p>
+                    <p className="mt-4 text-sm leading-relaxed text-bone/65">
+                      {event.note}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-10">
+              <EmptyState
+                compact
+                eyebrow="Archives"
+                title="Les archives se préparent"
+                description="Les captations et souvenirs de scène seront réunis ici au fil des prochains rendez-vous."
+              />
+            </div>
+          )}
 
           <div className="mt-10 flex flex-wrap gap-3">
             <CTA href="/videos" tone="outline">

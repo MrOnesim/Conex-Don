@@ -1,5 +1,6 @@
 "use client";
 
+import { useReducedMotion } from "motion/react";
 import {
   useEffect,
   useRef,
@@ -28,6 +29,7 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const reducedMotion = useReducedMotion() ?? false;
   const Tag = (as ?? "div") as ElementType;
 
   useEffect(() => {
@@ -54,9 +56,9 @@ export function Reveal({
   return (
     <Tag
       ref={ref}
-      data-visible={visible ? "true" : "false"}
+      data-visible={visible || reducedMotion ? "true" : "false"}
       className={`${variantClass} ${className}`}
-      style={{ transitionDelay: `${delay}ms`, ...style }}
+      style={{ transitionDelay: `${reducedMotion ? 0 : delay}ms`, ...style }}
     >
       {children}
     </Tag>
@@ -79,6 +81,7 @@ export function RevealWords({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const reducedMotion = useReducedMotion() ?? false;
   const Tag = (as ?? "p") as ElementType;
 
   useEffect(() => {
@@ -102,12 +105,16 @@ export function RevealWords({
   return (
     <Tag ref={ref} className={className}>
       {text.split(" ").map((word, index) => (
-        <span key={`${word}-${index}`} className="inline-block overflow-hidden align-bottom">
+        <span
+          key={`${word}-${index}`}
+          className="inline-block overflow-hidden align-bottom"
+        >
           <span
             className="inline-block transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
             style={{
-              transform: visible ? "translateY(0)" : "translateY(105%)",
-              transitionDelay: `${delay + index * step}ms`,
+              transform:
+                visible || reducedMotion ? "translateY(0)" : "translateY(105%)",
+              transitionDelay: `${reducedMotion ? 0 : delay + index * step}ms`,
             }}
           >
             {word}

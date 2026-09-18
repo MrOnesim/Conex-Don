@@ -44,8 +44,8 @@ export default async function AlobaPage() {
         </VelocitySkew>
       </div>
 
-      <section className="bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+      <section className="route-section">
+        <div className="route-frame">
           <AlobaWall initialPosts={initial} />
 
           <div className="mt-16 grid grid-cols-1 gap-px border border-bone/12 bg-bone/12 sm:grid-cols-3">
@@ -63,7 +63,7 @@ export default async function AlobaPage() {
                 body: "Coulisses, versions live et annonces envoyées en premier aux abonnés.",
               },
             ].map((item) => (
-              <div key={item.title} className="bg-ink p-6 sm:p-8">
+              <div key={item.title} className="editorial-row bg-ink p-6 sm:p-8">
                 <h3 className="display-xl text-2xl sm:text-3xl">{item.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-bone/60">{item.body}</p>
               </div>

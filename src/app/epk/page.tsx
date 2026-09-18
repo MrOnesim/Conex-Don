@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { PageHeader } from "@/components/ui";
-import { awards, biography, duo, socials, stats, technicalRider } from "@/content/site";
+import { CTA, PageHeader } from "@/components/ui";
+import {
+  awards,
+  biography,
+  duo,
+  socials,
+  stats,
+  technicalRider,
+} from "@/content/site";
 import { getEvents, getNews, getReleases, getVideos } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +41,19 @@ export const metadata: Metadata = {
 };
 
 const photos = [
-  { src: "/images/HÉRITAGE-VIVANT.jpg", label: "HÉRITAGE VIVANT — visuel (carré)" },
-  { src: "/images/DESSIGUIMANZANBERA.png", label: "DESSIGUIMANZANBERA — visuel (carré)" },
+  {
+    src: "/images/HÉRITAGE-VIVANT.jpg",
+    label: "HÉRITAGE VIVANT — visuel (carré)",
+  },
+  {
+    src: "/images/DESSIGUIMANZANBERA.png",
+    label: "DESSIGUIMANZANBERA — visuel (carré)",
+  },
   { src: "/images/MODE-AVION.jpg", label: "MODE AVION — visuel (carré)" },
-  { src: "/images/SYMPHONIE-BÉNINOISE.webp", label: "LA SYMPHONIE BÉNINOISE — visuel (carré)" },
+  {
+    src: "/images/SYMPHONIE-BÉNINOISE.webp",
+    label: "LA SYMPHONIE BÉNINOISE — visuel (carré)",
+  },
   { src: "/images/Découverte.jpg", label: "DÉCOUVERTE — visuel (carré)" },
   { src: "/images/Tchiza.jpg", label: "TCHIZA — visuel (carré)" },
   { src: "/images/AKA.jpg", label: "AKA — visuel (carré)" },
@@ -76,38 +92,60 @@ export default async function EpkPage() {
         accent="#D6A83A"
       />
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-4 px-5 py-6 sm:px-8 lg:px-12">
-          <a
-            href="/api/epk"
-            className="bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
-          >
-            Télécharger le press kit (PDF)
+      <section
+        className="route-section route-section--soft"
+        aria-label="Actions Press Kit"
+      >
+        <div className="route-frame route-frame--compact flex flex-wrap items-center gap-3">
+          <a href="/api/epk" className="button button--solid">
+            <span className="button__label">Télécharger le press kit (PDF)</span>
+            <span className="button__arrow" aria-hidden="true">↓</span>
           </a>
-          <a
-            href="mailto:booking.conexetdon@gmail.com"
-            className="border border-bone/25 px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors hover:border-gold hover:text-gold"
-          >
+          <CTA href="mailto:booking.conexetdon@gmail.com" tone="outline">
             Contacter le management
-          </a>
+          </CTA>
+          <nav
+            className="epk-index ml-0 flex flex-wrap gap-x-4 gap-y-2 lg:ml-auto"
+            aria-label="Sommaire EPK"
+          >
+            <a href="#epk-bio">Bio</a>
+            <a href="#epk-photos">Photos</a>
+            <a href="#epk-catalogue">Catalogue</a>
+            <a href="#epk-reperes">Repères</a>
+            <a href="#epk-rider">Rider</a>
+          </nav>
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-10 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-24">
+      <section id="epk-bio" className="route-section">
+        <div className="route-frame grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="eyebrow text-bone/40">01 — Biographie courte</p>
-            <p className="mt-5 text-[15px] leading-relaxed text-bone/80">{biography.short}</p>
+            <p className="mt-5 text-[15px] leading-relaxed text-bone/80">
+              {biography.short}
+            </p>
           </div>
           <div>
             <p className="eyebrow text-bone/40">02 — Identité</p>
             <dl className="mt-5 space-y-3 text-sm">
               {[
                 { label: "Formation", value: "Conex & Don — duo, depuis 2022" },
-                { label: "Conex", value: `${duo.conex.fullName} — ${duo.conex.origin}` },
-                { label: "Don", value: `${duo.don.fullName} — ${duo.don.origin}` },
-                { label: "Genres", value: "Afrobeat · Afropop · Amapiano · Rap" },
-                { label: "Langues", value: "Français, fongbé et langues locales du Bénin" },
+                {
+                  label: "Conex",
+                  value: `${duo.conex.fullName} — ${duo.conex.origin}`,
+                },
+                {
+                  label: "Don",
+                  value: `${duo.don.fullName} — ${duo.don.origin}`,
+                },
+                {
+                  label: "Genres",
+                  value: "Afrobeat · Afropop · Amapiano · Rap",
+                },
+                {
+                  label: "Langues",
+                  value: "Français, fongbé et langues locales du Bénin",
+                },
                 { label: "Base", value: "Bénin" },
               ].map((item) => (
                 <div
@@ -117,7 +155,9 @@ export default async function EpkPage() {
                   <dt className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
                     {item.label}
                   </dt>
-                  <dd className="max-w-[62%] text-right text-bone/80">{item.value}</dd>
+                  <dd className="max-w-[62%] text-right text-bone/80">
+                    {item.value}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -133,12 +173,14 @@ export default async function EpkPage() {
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-          <p className="eyebrow text-bone/40">04 — Photos HD (usage presse, crédit obligatoire)</p>
+      <section id="epk-photos" className="route-section route-section--soft">
+        <div className="route-frame">
+          <p className="eyebrow text-bone/40">
+            04 — Photos HD (usage presse, crédit obligatoire)
+          </p>
           <ul className="mt-8 grid grid-cols-2 gap-px border border-bone/12 bg-bone/12 lg:grid-cols-4">
             {photos.map((photo) => (
-              <li key={photo.src} className="bg-ink">
+              <li key={photo.src} className="editorial-row bg-ink">
                 <div className="relative aspect-4/5 w-full overflow-hidden">
                   <OptimizedImage
                     src={photo.src}
@@ -151,7 +193,9 @@ export default async function EpkPage() {
                   />
                 </div>
                 <div className="p-4">
-                  <p className="text-[11px] leading-snug text-bone/70">{photo.label}</p>
+                  <p className="text-[11px] leading-snug text-bone/70">
+                    {photo.label}
+                  </p>
                   <a
                     href={photo.src}
                     download
@@ -164,32 +208,46 @@ export default async function EpkPage() {
             ))}
           </ul>
           <p className="mt-6 text-xs text-bone/40">
-            Crédit photo : « Conex &amp; Don — visuels d&apos;illustration du site officiel ».
+            Crédit photo : « Conex &amp; Don — visuels d&apos;illustration du
+            site officiel ».
           </p>
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-24">
+      <section id="epk-catalogue" className="route-section">
+        <div className="route-frame grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <p className="eyebrow text-bone/40">05 — Discographie</p>
-            <ul className="mt-6 divide-y divide-bone/10 border-t border-bone/12">
+            <ul className="editorial-list mt-6">
               {releases.map((release) => (
-                <li key={release.slug} className="flex items-baseline justify-between gap-4 py-3">
-                  <span className="display-xl text-lg sm:text-xl">{release.title}</span>
+                <li
+                  key={release.slug}
+                  className="editorial-row flex items-baseline justify-between gap-4 py-3"
+                >
+                  <span className="display-xl text-lg sm:text-xl">
+                    {release.title}
+                  </span>
                   <span className="shrink-0 text-[10px] uppercase tracking-[0.18em] text-bone/45">
-                    {release.year} · {release.kind} · {release.trackCount} titres
+                    {release.year} · {release.kind} · {release.trackCount}{" "}
+                    titres
                   </span>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="eyebrow text-bone/40">06 — Vidéographie (sélection)</p>
-            <ul className="mt-6 divide-y divide-bone/10 border-t border-bone/12">
+            <p className="eyebrow text-bone/40">
+              06 — Vidéographie (sélection)
+            </p>
+            <ul className="editorial-list mt-6">
               {videos.slice(0, 12).map((video) => (
-                <li key={video.slug} className="flex items-baseline justify-between gap-4 py-3">
-                  <span className="display-xl text-lg sm:text-xl">{video.title}</span>
+                <li
+                  key={video.slug}
+                  className="editorial-row flex items-baseline justify-between gap-4 py-3"
+                >
+                  <span className="display-xl text-lg sm:text-xl">
+                    {video.title}
+                  </span>
                   <span className="shrink-0 text-[10px] uppercase tracking-[0.18em] text-bone/45">
                     {video.year} · {video.category}
                   </span>
@@ -200,8 +258,8 @@ export default async function EpkPage() {
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+      <section id="epk-reperes" className="route-section route-section--soft">
+        <div className="route-frame">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
             <div>
               <p className="eyebrow text-bone/40">07 — Statistiques</p>
@@ -234,7 +292,10 @@ export default async function EpkPage() {
               <p className="eyebrow text-bone/40">09 — Concerts &amp; live</p>
               <ul className="mt-6 space-y-5">
                 {events.map((event) => (
-                  <li key={event.title} className="border-l border-bone/15 pl-4">
+                  <li
+                    key={event.title}
+                    className="border-l border-bone/15 pl-4"
+                  >
                     <p className="text-sm uppercase tracking-[0.08em] text-bone/85">
                       {event.title}
                     </p>
@@ -249,10 +310,12 @@ export default async function EpkPage() {
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-12 lg:py-24">
+      <section id="epk-rider" className="route-section">
+        <div className="route-frame grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="eyebrow text-bone/40">10 — Fiche technique / rider (indicatif)</p>
+            <p className="eyebrow text-bone/40">
+              10 — Fiche technique / rider (indicatif)
+            </p>
             <ul className="mt-6 space-y-3 text-sm leading-relaxed text-bone/70">
               {technicalRider.map((item) => (
                 <li key={item} className="border-b border-bone/10 pb-3">
@@ -261,8 +324,8 @@ export default async function EpkPage() {
               ))}
             </ul>
             <p className="mt-5 text-xs text-bone/40">
-              Fiche technique détaillée transmise par l&apos;équipe technique lors de la
-              confirmation.
+              Fiche technique détaillée transmise par l&apos;équipe technique
+              lors de la confirmation.
             </p>
           </div>
           <div>

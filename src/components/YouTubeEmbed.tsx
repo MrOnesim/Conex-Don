@@ -1,6 +1,9 @@
 "use client";
 
+import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
+
+import { motionSpring } from "@/components/motion";
 
 export function YouTubeEmbed({
   youtubeId,
@@ -10,9 +13,10 @@ export function YouTubeEmbed({
   title: string;
 }) {
   const [playing, setPlaying] = useState(false);
+  const reducedMotion = useReducedMotion() ?? false;
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden border border-bone/15 bg-ink-soft">
+    <div className="youtube-embed relative aspect-video w-full overflow-hidden border border-bone/15 bg-ink-soft">
       {playing ? (
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0&autoplay=1`}
@@ -25,14 +29,24 @@ export function YouTubeEmbed({
         <button
           type="button"
           onClick={() => setPlaying(true)}
-          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-6 p-8 text-center transition-colors hover:bg-bone/5"
+          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-5 p-8 text-center"
           aria-label={`Lancer ${title} — YouTube`}
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-full border border-gold text-lg text-gold">
+          <motion.span
+            className="youtube-embed__play"
+            aria-hidden="true"
+            whileHover={reducedMotion ? undefined : { scale: 1.08 }}
+            whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+            transition={reducedMotion ? { duration: 0 } : motionSpring}
+          >
             ▶
+          </motion.span>
+          <span className="display-xl text-2xl text-bone/85 sm:text-4xl">
+            {title}
           </span>
-          <span className="display-xl text-2xl text-bone/80 sm:text-4xl">{title}</span>
-          <span className="eyebrow text-bone/40">Écouter en direct · YouTube</span>
+          <span className="eyebrow text-bone/45">
+            Écouter en direct · YouTube
+          </span>
         </button>
       )}
     </div>

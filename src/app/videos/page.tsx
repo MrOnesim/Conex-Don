@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { PageHeader, SectionHead } from "@/components/ui";
+import { CTA, PageHeader, SectionHead } from "@/components/ui";
 import { VideoWall } from "@/components/VideoWall";
 import { getVideos } from "@/lib/data";
 
@@ -86,8 +86,8 @@ export default async function VideosPage() {
         accent="#9E382C"
       />
 
-      <section className="bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
+      <section className="route-section">
+        <div className="route-frame route-frame--compact">
           <VideoWall videos={videos} filterable />
 
           <div className="mt-16">
@@ -97,14 +97,11 @@ export default async function VideosPage() {
               intro="La chaîne rassemble les clips, visualizers, performances et contenus musicaux du duo — plus de 100 000 abonnés."
               accent="#D6A83A"
             />
-            <a
-              href="https://www.youtube.com/@ConexetDon"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-8 inline-block bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
-            >
-              Ouvrir la chaîne
-            </a>
+            <div className="mt-8">
+              <CTA href="https://www.youtube.com/@ConexetDon" tone="solid" external>
+                Ouvrir la chaîne
+              </CTA>
+            </div>
           </div>
         </div>
       </section>

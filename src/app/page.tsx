@@ -30,15 +30,16 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [releases, videos, events, news, symphonie, modeAvion, latest] = await Promise.all([
-    getReleases(),
-    getVideos(),
-    getEvents(),
-    getNews(),
-    getRelease("la-symphonie-beninoise"),
-    getRelease("mode-avion"),
-    getRelease("dessiguimanzanbera"),
-  ]);
+  const [releases, videos, events, news, symphonie, modeAvion, latest] =
+    await Promise.all([
+      getReleases(),
+      getVideos(),
+      getEvents(),
+      getNews(),
+      getRelease("la-symphonie-beninoise"),
+      getRelease("mode-avion"),
+      getRelease("dessiguimanzanbera"),
+    ]);
 
   const latestRelease = latest?.release ?? releases[0];
 
@@ -59,8 +60,8 @@ export default async function HomePage() {
       <HeritageSection />
       <LatestRelease release={latestRelease} />
 
-      <section id="musique" className="border-b border-bone/10 bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section id="musique" className="route-section">
+        <div className="route-frame">
           <SectionHead
             index="06"
             label="Discographie"
@@ -73,8 +74,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-bone/10 bg-ink-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section className="route-section route-section--soft">
+        <div className="route-frame">
           <SectionHead
             index="07"
             label="Vidéographie"
@@ -95,9 +96,12 @@ export default async function HomePage() {
       <DuoSection index="08" />
       <StatsBand />
 
-      <section className="relative overflow-hidden border-b border-bone/10 bg-ink">
-        <div className="dotgrid absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section className="route-section relative overflow-hidden">
+        <div
+          className="dotgrid absolute inset-0 opacity-20"
+          aria-hidden="true"
+        />
+        <div className="route-frame relative">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-16">
             <div>
               <Kicker color="text-gold">09 — La communauté</Kicker>
@@ -119,7 +123,7 @@ export default async function HomePage() {
               </div>
             </div>
             <Reveal delay={120}>
-              <ul className="divide-y divide-bone/12 border-t border-bone/12">
+              <ul className="editorial-list">
                 {[
                   {
                     title: "Le mur des fans",
@@ -134,9 +138,13 @@ export default async function HomePage() {
                     body: "Coulisses, versions live et annonces envoyées en premier aux abonnés.",
                   },
                 ].map((item) => (
-                  <li key={item.title} className="py-5">
-                    <p className="display-xl text-2xl sm:text-3xl">{item.title}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-bone/60">{item.body}</p>
+                  <li key={item.title} className="editorial-row py-5">
+                    <p className="display-xl text-2xl sm:text-3xl">
+                      {item.title}
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-bone/60">
+                      {item.body}
+                    </p>
                   </li>
                 ))}
               </ul>
@@ -148,23 +156,23 @@ export default async function HomePage() {
       <LiveBanner events={events} index="10" />
       <NewsGrid posts={news} limit={3} index="11" />
 
-      <section className="border-b border-bone/10 bg-bone text-ink">
-        <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-5 py-16 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+      <section className="home-outro border-b border-bone/10 bg-bone text-ink">
+        <div className="route-frame flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <p className="display-xl text-[clamp(3rem,10vw,6rem)] leading-[0.9] sm:text-[clamp(4rem,5vw,5rem)] lg:text-[clamp(5rem,4rem,6rem)]">
             L&apos;histoire <span className="text-clay">continue.</span>
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/histoire"
-              className="bg-ink px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-bone transition-colors hover:bg-clay"
-            >
-              Revoir la timeline
+            <Link href="/histoire" className="button button--ink">
+              <span className="button__label">Revoir la timeline</span>
+              <span className="button__arrow" aria-hidden="true">
+                →
+              </span>
             </Link>
-            <Link
-              href="/epk"
-              className="border border-ink/25 px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] transition-colors hover:border-clay hover:text-clay"
-            >
-              Press kit
+            <Link href="/epk" className="button button--outline-ink">
+              <span className="button__label">Press kit</span>
+              <span className="button__arrow" aria-hidden="true">
+                →
+              </span>
             </Link>
           </div>
         </div>

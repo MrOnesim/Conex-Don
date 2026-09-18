@@ -11,6 +11,15 @@ export const metadata: Metadata = {
   alternates: { canonical: "/booking" },
 };
 
+const checklist = [
+  "Date, ville, pays et lieu de l'événement",
+  "Type de prestation et durée de set souhaitée",
+  "Jauge / capacité attendue et public",
+  "Budget indicatif : cachet, voyage et hébergement",
+  "Ligne d'affichage et artistes confirmés",
+  "Fiche technique et backline disponibles sur place",
+];
+
 export default function BookingPage() {
   return (
     <>
@@ -21,54 +30,76 @@ export default function BookingPage() {
         accent="#9E382C"
       />
 
-      <section className="bg-ink">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,0.38fr)] lg:gap-16 lg:px-12 lg:py-20">
-          <div className="border border-bone/12 p-6 sm:p-10">
-            <p className="eyebrow text-bone/40">Formulaire de demande</p>
-            <h2 className="display-xl mt-4 text-3xl sm:text-4xl">VOTRE ÉVÉNEMENT</h2>
-            <div className="mt-9">
+      <section className="route-section">
+        <div className="route-frame grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(18rem,0.38fr)] lg:gap-12">
+          <article className="editorial-panel editorial-panel--padded border-l-2 border-clay">
+            <div className="flex items-baseline justify-between gap-4 border-b border-bone/12 pb-5">
+              <div>
+                <p className="eyebrow text-clay">Demande de disponibilité</p>
+                <h2 className="display-xl mt-3 text-3xl sm:text-5xl">
+                  VOTRE ÉVÉNEMENT
+                </h2>
+              </div>
+              <p className="text-[0.63rem] font-semibold tabular-nums tracking-[0.15em] text-bone/40">
+                01 / 01
+              </p>
+            </div>
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-bone/60">
+              Quelques informations suffisent pour lancer l&apos;échange. Les
+              champs marqués d&apos;un astérisque sont nécessaires pour vous
+              répondre.
+            </p>
+            <div className="mt-8">
               <BookingForm />
             </div>
-          </div>
+          </article>
 
-          <aside className="space-y-8">
-            <div className="border border-bone/12 p-6 sm:p-8">
-              <p className="eyebrow text-bone/40">Contact booking</p>
+          <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
+            <section className="editorial-panel editorial-panel--padded">
+              <p className="eyebrow text-bone/40">Contact direct</p>
               <a
                 href={`mailto:${site.contact.bookingEmail}`}
-                className="mt-4 block break-all text-lg text-gold"
+                className="route-link mt-4 max-w-full break-all text-gold"
                 data-cursor="Écrire"
               >
-                {site.contact.bookingEmail}
+                {site.contact.bookingEmail} <span aria-hidden="true">↗</span>
               </a>
               <a
                 href={`tel:${site.contact.bookingPhone.replace(/\s/g, "")}`}
-                className="mt-3 block text-lg text-bone/85"
+                className="mt-4 block text-lg text-bone/85 transition-colors hover:text-gold"
               >
                 {site.contact.bookingPhone}
               </a>
-              <p className="mt-4 text-sm text-bone/55">{site.contact.management}</p>
-            </div>
-
-            <div className="border border-bone/12 p-6 sm:p-8">
-              <p className="eyebrow text-bone/40">Ce qu&apos;il faut préciser</p>
-              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-bone/65">
-                <li>— Date, ville, pays et lieu de l&apos;événement</li>
-                <li>— Type de prestation et durée de set souhaitée</li>
-                <li>— Jauge / capacité attendue et public</li>
-                <li>— Budget indicatif (cache, travel, hébergement)</li>
-                <li>— Ligne d&apos;affichage et autres artistes confirmés</li>
-                <li>— Fiche technique et backline disponibles sur place</li>
-              </ul>
-            </div>
-
-            <div className="border border-bone/12 p-6 sm:p-8">
-              <p className="eyebrow text-bone/40">Délais</p>
-              <p className="mt-4 text-sm leading-relaxed text-bone/65">
-                Les demandes internationales et les dates de haute saison sont traitées en priorité
-                : anticipez si possible 8 à 12 semaines avant la date envisagée.
+              <p className="mt-3 text-sm text-bone/50">
+                {site.contact.management}
               </p>
-            </div>
+            </section>
+
+            <section className="editorial-panel editorial-panel--padded">
+              <p className="eyebrow text-bone/40">Pour aller vite</p>
+              <ul className="editorial-list mt-4">
+                {checklist.map((item, index) => (
+                  <li
+                    key={item}
+                    className="flex gap-3 py-3 text-sm leading-relaxed text-bone/65"
+                  >
+                    <span className="shrink-0 text-[0.63rem] font-semibold tabular-nums text-clay">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="route-callout py-3">
+              <p className="eyebrow text-gold">Délais</p>
+              <p className="mt-3 text-sm leading-relaxed text-bone/60">
+                Les demandes internationales et les dates de haute saison sont
+                traitées en priorité. Anticipez si possible 8 à 12 semaines
+                avant la date envisagée.
+              </p>
+            </section>
           </aside>
         </div>
       </section>

@@ -1,20 +1,72 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useState } from "react";
+
+import { motionEase } from "@/components/motion";
 import {
   getCookieConsent,
-  setCookieConsent,
   OPEN_PREFERENCES_EVENT,
-  type CookiePreferences,
+  setCookieConsent,
 } from "@/lib/cookie-consent";
 import { markHydrated, useIsHydrated } from "@/lib/use-is-hydrated";
 
+function Preference({
+  id,
+  title,
+  description,
+  checked,
+  onChange,
+  disabled = false,
+  alwaysOn = false,
+}: {
+  id: string;
+  title: string;
+  description: string;
+  checked: boolean;
+  onChange?: (next: boolean) => void;
+  disabled?: boolean;
+  alwaysOn?: boolean;
+}) {
+  return (
+    <div className="preference-row">
+      <div>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor={id} className="text-sm font-semibold text-bone">
+            {title}
+          </label>
+          {alwaysOn ? (
+            <span className="border border-gold/35 px-1.5 py-0.5 text-[0.54rem] font-bold uppercase tracking-[0.12em] text-gold">
+              Toujours actif
+            </span>
+          ) : null}
+        </div>
+        <p
+          id={`${id}-description`}
+          className="mt-1.5 max-w-2xl text-xs leading-relaxed text-bone/60"
+        >
+          {description}
+        </p>
+      </div>
+      <input
+        id={id}
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={(event) => onChange?.(event.target.checked)}
+        className="preference-switch"
+        aria-describedby={`${id}-description`}
+      />
+    </div>
+  );
+}
+
 export function CookieConsent() {
   const mounted = useIsHydrated();
+  const reducedMotion = useReducedMotion() ?? false;
   const [visible, setVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-
   const [analyticsAllowed, setAnalyticsAllowed] = useState(
     () => getCookieConsent()?.analytics ?? false,
   );
@@ -25,9 +77,8 @@ export function CookieConsent() {
   useEffect(() => {
     markHydrated();
     if (!getCookieConsent()) {
-      // Delay entrance slightly for non-jarring luxury presentation
-      const timer = setTimeout(() => setVisible(true), 800);
-      return () => clearTimeout(timer);
+      const timer = window.setTimeout(() => setVisible(true), 650);
+      return () => window.clearTimeout(timer);
     }
   }, []);
 
@@ -41,197 +92,175 @@ export function CookieConsent() {
       setShowDetails(true);
       setVisible(true);
     };
-
     window.addEventListener(OPEN_PREFERENCES_EVENT, handleOpen);
     return () => window.removeEventListener(OPEN_PREFERENCES_EVENT, handleOpen);
   }, []);
 
-  if (!mounted || !visible) return null;
-
-  const handleAcceptAll = () => {
-    setCookieConsent({ analytics: true, media: true });
+  const closeWith = (analytics: boolean, media: boolean) => {
+    setCookieConsent({ analytics, media });
     setVisible(false);
     setShowDetails(false);
   };
 
-  const handleRejectAll = () => {
-    setCookieConsent({ analytics: false, media: false });
-    setVisible(false);
-    setShowDetails(false);
-  };
-
-  const handleSaveCustom = () => {
-    setCookieConsent({
-      analytics: analyticsAllowed,
-      media: mediaAllowed,
-    });
-    setVisible(false);
-    setShowDetails(false);
-  };
+  if (!mounted) return null;
 
   return (
-    <div
-      role="region"
-      aria-label="Consentement aux cookies"
-      className="fixed inset-x-0 bottom-0 z-[80] px-3 pt-3 sm:px-5 sm:pt-5 pb-20 sm:pb-28 pointer-events-none animate-in fade-in slide-in-from-bottom-5 duration-300"
-    >
-      <div className="mx-auto max-w-4xl pointer-events-auto rounded-2xl border border-bone/15 bg-ink/95 p-5 sm:p-6 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl">
-        {!showDetails ? (
-          /* Simple initial banner */
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-1.5 pr-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
-                <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-                  Respect de votre vie privée
-                </h2>
-              </div>
-              <p className="text-xs leading-relaxed text-bone/75 max-w-2xl">
-                Nous utilisons des cookies indispensables au bon fonctionnement du site et de son
-                lecteur audio. Avec votre accord, nous activons également des mesures d&apos;audience
-                anonymisées pour perfectionner votre expérience musicale.{" "}
-                <Link
-                  href="/legal#cookies"
-                  className="text-gold underline underline-offset-2 hover:text-bone"
-                >
-                  En savoir plus
-                </Link>
-                .
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 pt-2 md:pt-0 shrink-0">
-              <button
-                type="button"
-                onClick={() => setShowDetails(true)}
-                className="px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.18em] border border-bone/20 rounded-lg text-bone/70 hover:border-bone/50 hover:text-bone transition-colors"
-              >
-                Personnaliser
-              </button>
-              <button
-                type="button"
-                onClick={handleRejectAll}
-                className="px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.18em] border border-bone/20 rounded-lg text-bone/70 hover:border-bone/50 hover:text-bone transition-colors"
-              >
-                Refuser
-              </button>
-              <button
-                type="button"
-                onClick={handleAcceptAll}
-                className="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] bg-gold text-ink rounded-lg hover:bg-gold/90 transition-all shadow-md shadow-gold/20"
-              >
-                Tout accepter
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Granular custom settings modal */
-          <div className="space-y-5">
-            <div className="flex items-center justify-between border-b border-bone/10 pb-4">
-              <div>
-                <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-gold">
-                  Paramètres de confidentialité &amp; Cookies
-                </h2>
-                <p className="text-xs text-bone/50 mt-0.5">
-                  Choisissez les finalités que vous souhaitez autoriser lors de votre navigation.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowDetails(false)}
-                className="text-xs text-bone/50 hover:text-bone p-1"
-                aria-label="Fermer les paramètres"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-4 text-xs">
-              {/* Essential cookies */}
-              <div className="flex items-start justify-between gap-4 rounded-xl bg-bone/[0.03] p-3.5 border border-bone/8">
-                <div className="space-y-1">
+    <AnimatePresence>
+      {visible ? (
+        <motion.aside
+          role="region"
+          aria-label="Consentement aux cookies"
+          className="fixed inset-x-0 bottom-0 z-[95] px-3 pb-20 pt-3 sm:px-5 sm:pb-28 sm:pt-5"
+          initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+          transition={
+            reducedMotion
+              ? { duration: 0 }
+              : { duration: 0.32, ease: motionEase }
+          }
+        >
+          <div className="dialog-surface mx-auto max-w-4xl p-5 sm:p-6">
+            {!showDetails ? (
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div className="max-w-2xl">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-bone">Cookies strictement nécessaires</span>
-                    <span className="rounded bg-bone/10 px-2 py-0.5 text-[9px] uppercase tracking-wider text-gold">
-                      Toujours actif
-                    </span>
+                    <span
+                      className="live-dot h-2 w-2 bg-gold"
+                      aria-hidden="true"
+                    />
+                    <h2 className="eyebrow text-gold">
+                      Votre espace, vos choix
+                    </h2>
                   </div>
-                  <p className="text-bone/60 leading-relaxed">
-                    Requis pour la sécurité, la conservation de votre thème d&apos;affichage, l&apos;état
-                    du lecteur audio immersif et le bon fonctionnement de la navigation.
+                  <p className="mt-2 text-xs leading-relaxed text-bone/70">
+                    Le site utilise les cookies nécessaires au lecteur et à la
+                    navigation. Avec votre accord, nous activons aussi les
+                    mesures d&apos;audience anonymisées et les médias externes.{" "}
+                    <Link
+                      href="/legal#cookies"
+                      className="link-underline text-gold hover:text-bone"
+                    >
+                      En savoir plus
+                    </Link>
+                    .
                   </p>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={true}
-                  disabled
-                  className="mt-1 h-4 w-4 accent-gold cursor-not-allowed opacity-70"
-                />
-              </div>
-
-              {/* Analytics cookies */}
-              <div className="flex items-start justify-between gap-4 rounded-xl bg-bone/[0.03] p-3.5 border border-bone/8">
-                <div className="space-y-1">
-                  <span className="font-semibold text-bone">Mesures d&apos;audience anonymisées</span>
-                  <p className="text-bone/60 leading-relaxed">
-                    Permettent d&apos;analyser les volumes de visites, les morceaux les plus écoutés
-                    et les performances de diffusion sans collecter d&apos;identifiant personnel.
-                  </p>
+                <div className="flex flex-wrap gap-2 md:justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setShowDetails(true)}
+                    className="button button--outline"
+                  >
+                    <span className="button__label">Personnaliser</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => closeWith(false, false)}
+                    className="button button--outline"
+                  >
+                    <span className="button__label">Refuser</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => closeWith(true, true)}
+                    className="button button--gold"
+                  >
+                    <span className="button__label">Tout accepter</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={analyticsAllowed}
-                  onChange={(e) => setAnalyticsAllowed(e.target.checked)}
-                  id="consent-analytics"
-                  className="mt-1 h-4 w-4 accent-gold cursor-pointer"
-                />
               </div>
-
-              {/* External Media cookies */}
-              <div className="flex items-start justify-between gap-4 rounded-xl bg-bone/[0.03] p-3.5 border border-bone/8">
-                <div className="space-y-1">
-                  <span className="font-semibold text-bone">Médias &amp; Lecteurs externes</span>
-                  <p className="text-bone/60 leading-relaxed">
-                    Facilitent l&apos;intégration fluide des clips YouTube et des liens vers Spotify,
-                    Apple Music et Audiomack.
-                  </p>
+            ) : (
+              <div>
+                <div className="flex items-start justify-between gap-5 border-b border-bone/12 pb-4">
+                  <div>
+                    <h2 className="eyebrow text-gold">
+                      Préférences de confidentialité
+                    </h2>
+                    <p className="mt-2 max-w-2xl text-xs leading-relaxed text-bone/60">
+                      Choisissez les finalités facultatives que vous souhaitez
+                      autoriser. Votre choix reste modifiable à tout moment.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowDetails(false)}
+                    className="icon-control h-8 min-h-8 min-w-8"
+                    aria-label="Retour au résumé des cookies"
+                  >
+                    ×
+                  </button>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={mediaAllowed}
-                  onChange={(e) => setMediaAllowed(e.target.checked)}
-                  id="consent-media"
-                  className="mt-1 h-4 w-4 accent-gold cursor-pointer"
-                />
+                <div className="mt-4 space-y-3">
+                  <Preference
+                    id="consent-necessary"
+                    title="Cookies strictement nécessaires"
+                    description="Requis pour la sécurité, le thème, le lecteur intégré et le bon fonctionnement de la navigation."
+                    checked
+                    disabled
+                    alwaysOn
+                  />
+                  <Preference
+                    id="consent-analytics"
+                    title="Mesures d'audience anonymisées"
+                    description="Aident à comprendre les parcours et les contenus les plus consultés, sans identifiant personnel."
+                    checked={analyticsAllowed}
+                    onChange={setAnalyticsAllowed}
+                  />
+                  <Preference
+                    id="consent-media"
+                    title="Médias et lecteurs externes"
+                    description="Facilitent l'intégration des clips YouTube et les passages vers les plateformes musicales officielles."
+                    checked={mediaAllowed}
+                    onChange={setMediaAllowed}
+                  />
+                </div>
+                <div className="mt-5 flex flex-wrap justify-end gap-2 border-t border-bone/12 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => closeWith(false, false)}
+                    className="button button--outline"
+                  >
+                    <span className="button__label">Refuser tout</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => closeWith(analyticsAllowed, mediaAllowed)}
+                    className="button button--outline"
+                  >
+                    <span className="button__label">Enregistrer mes choix</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => closeWith(true, true)}
+                    className="button button--gold"
+                  >
+                    <span className="button__label">Tout autoriser</span>
+                    <span className="button__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-end gap-3 border-t border-bone/10 pt-4">
-              <button
-                type="button"
-                onClick={handleRejectAll}
-                className="px-4 py-2 text-[10px] font-medium uppercase tracking-[0.18em] border border-bone/20 rounded-lg text-bone/70 hover:text-bone hover:border-bone/50 transition-colors"
-              >
-                Refuser tout
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveCustom}
-                className="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] border border-gold text-gold rounded-lg hover:bg-gold/10 transition-colors"
-              >
-                Enregistrer mes choix
-              </button>
-              <button
-                type="button"
-                onClick={handleAcceptAll}
-                className="px-5 py-2 text-[10px] font-bold uppercase tracking-[0.18em] bg-gold text-ink rounded-lg hover:bg-gold/90 transition-all shadow-md shadow-gold/20"
-              >
-                Tout autoriser
-              </button>
-            </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
+        </motion.aside>
+      ) : null}
+    </AnimatePresence>
   );
 }

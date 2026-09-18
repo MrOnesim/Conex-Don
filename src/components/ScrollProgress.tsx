@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Filet de progression de lecture — dégradé or → argile, 2 px,
+ * Filet de progression de lecture — or uni, 2 px,
  * fixé sous le bord haut du viewport. Transform-only (aucun reflow).
  */
 export function ScrollProgress() {

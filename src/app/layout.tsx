@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Instrument_Serif, Inter } from "next/font/google";
+import "@fontsource/anton/latin-400.css";
+import "@fontsource/instrument-serif/latin-400.css";
+import "@fontsource/instrument-serif/latin-400-italic.css";
+import "@fontsource-variable/inter/wght.css";
+import Script from "next/script";
 import { type ReactNode } from "react";
 
 import { AnalyticsProvider } from "@/components/Analytics";
@@ -13,27 +17,6 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { awards, site, socials, stats } from "@/content/site";
 import "./globals.css";
-
-const fontDisplay = Anton({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-anton",
-  display: "swap",
-});
-
-const fontSerifDisplay = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-instrument-serif",
-  display: "swap",
-});
-
-const fontBody = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -88,7 +71,9 @@ export const metadata: Metadata = {
     site: "@conexetdon",
     title: "CONEX & DON — L'héritage en mouvement",
     description: site.description,
-    images: ["/api/og?title=CONEX%20%26%20DON&description=L%27h%C3%A9ritage%20en%20mouvement"],
+    images: [
+      "/api/og?title=CONEX%20%26%20DON&description=L%27h%C3%A9ritage%20en%20mouvement",
+    ],
   },
   robots: { index: true, follow: true },
   alternates: {
@@ -101,7 +86,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#080808",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 
 const musicGroupSchema = {
@@ -127,18 +112,27 @@ const musicGroupSchema = {
       birthPlace: { "@type": "Place", name: "Avédji, Bénin" },
     },
   ],
-  sameAs: socials.map((social, index) => `${social.href}`),
-  award: awards.map((award, index) => `${award.title} ${award.year} — ${award.detail}`),
+  sameAs: socials.map((social) => social.href),
+  award: awards.map(
+    (award) => `${award.title} ${award.year} — ${award.detail}`,
+  ),
   subjectOf: { "@type": "WebSite", name: site.name, url: site.url },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="fr"
-      className={`dark ${fontDisplay.variable} ${fontSerifDisplay.variable} ${fontBody.variable}`}
-    >
+    <html lang="fr" suppressHydrationWarning className="dark">
       <body className="bg-ink text-bone antialiased">
+        <Script id="theme-prepaint" strategy="beforeInteractive">
+          {`try {
+            const stored = localStorage.getItem('theme');
+            const theme = stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.classList.remove('dark', 'light');
+            document.documentElement.classList.add(theme);
+          } catch (_) { document.documentElement.classList.add('dark'); }`}
+        </Script>
         <div className="contents">
           <link rel="preconnect" href="https://i.ytimg.com" />
           <link rel="preconnect" href="https://s.ytimg.com" />
@@ -153,7 +147,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <CursorLabel />
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupSchema) }}
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(musicGroupSchema),
+            }}
           />
           <ThemeProvider>
             <>
@@ -168,7 +164,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </>
               </PlayerProvider>
               <span className="sr-only" aria-hidden="true">
-                {stats.map((stat, index) => `${stat.value} ${stat.label}`).join(" — ")}
+                {stats.map((stat) => `${stat.value} ${stat.label}`).join(" — ")}
               </span>
               <AnalyticsProvider />
               <CookieConsent />
@@ -179,11 +175,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/sw.js').then((registration) => {
-                    console.log('SW registered:', registration.scope);
-                  }).catch((error) => {
-                    console.log('SW registration failed:', error);
-                  });
+                  navigator.serviceWorker.register('/sw.js').catch(() => {});
                 });
               }
             `,

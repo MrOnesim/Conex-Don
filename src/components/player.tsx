@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   createContext,
   useCallback,
@@ -12,7 +13,9 @@ import {
   type ReactNode,
 } from "react";
 
+import { motionEase, motionSpring } from "@/components/motion";
 import { engineTracks } from "@/lib/audio-engine";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 
 /* ------------------------------------------------- YouTube IFrame API types */
 
@@ -122,6 +125,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(engineTracks[0].durationSec);
   const [open, setOpen] = useState(false);
+  const [playerRequested, setPlayerRequested] = useState(false);
 
   const hostRef = useRef<HTMLDivElement | null>(null);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -143,8 +147,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   const track = engineTracks[trackIndex];
 
-  // Crée le lecteur YouTube une seule fois une fois l'API chargée.
+  // The external YouTube API is intentionally deferred until a visitor asks
+  // to listen. The dock remains immediately usable without third-party work.
   useEffect(() => {
+    if (!playerRequested) return;
     const host = hostRef.current;
     if (!host || typeof window === "undefined") return;
 
@@ -176,7 +182,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           onStateChange: (event) => {
             const states = window.YT?.PlayerState;
             if (!states) return;
-            if (event.data === states.UNSTARTED || event.data === states.CUED) return;
+            if (event.data === states.UNSTARTED || event.data === states.CUED)
+              return;
             if (event.data === states.PLAYING) setPlaying(true);
             else if (event.data === states.PAUSED) setPlaying(false);
             if (event.data === states.ENDED) {
@@ -194,7 +201,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       player?.destroy();
       playerRef.current = null;
     };
-  }, []);
+  }, [playerRequested]);
 
   // Quand le mouvement change : charger la vidéo (et jouer si l'utilisateur écoute).
   useEffect(() => {
@@ -229,27 +236,25 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     playerRef.current?.pauseVideo();
   }, []);
 
-  const play = useCallback(
-    (index?: number) => {
-      const target = index ?? trackIndexRef.current;
-      intendRef.current = true;
-      setPlaying(true);
-      if (target !== trackIndexRef.current) {
-        setTrackIndex(target);
-        return;
-      }
-      const player = playerRef.current;
-      if (player) {
-        const id = engineTracks[target].youtubeId;
-        const states = window.YT?.PlayerState;
-        const state = player.getPlayerState();
-        const isLoaded = player.getVideoData()?.video_id === id;
-        if (isLoaded && states && state !== states.ENDED) player.playVideo();
-        else player.loadVideoById(id);
-      }
-    },
-    [],
-  );
+  const play = useCallback((index?: number) => {
+    const target = index ?? trackIndexRef.current;
+    intendRef.current = true;
+    setPlayerRequested(true);
+    setPlaying(true);
+    if (target !== trackIndexRef.current) {
+      setTrackIndex(target);
+      return;
+    }
+    const player = playerRef.current;
+    if (player) {
+      const id = engineTracks[target].youtubeId;
+      const states = window.YT?.PlayerState;
+      const state = player.getPlayerState();
+      const isLoaded = player.getVideoData()?.video_id === id;
+      if (isLoaded && states && state !== states.ENDED) player.playVideo();
+      else player.loadVideoById(id);
+    }
+  }, []);
 
   const pause = useCallback(() => {
     intendRef.current = false;
@@ -265,20 +270,20 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     }
   }, [pause, play]);
 
-  const requestTrack = useCallback(
-    (value: number) => {
-      intendRef.current = true;
-      setTrackIndex(value);
-    },
-    [],
-  );
+  const requestTrack = useCallback((value: number) => {
+    intendRef.current = true;
+    setPlayerRequested(true);
+    setTrackIndex(value);
+  }, []);
 
   const next = useCallback(() => {
     requestTrack((trackIndexRef.current + 1) % engineTracks.length);
   }, [requestTrack]);
 
   const prev = useCallback(() => {
-    requestTrack((trackIndexRef.current - 1 + engineTracks.length) % engineTracks.length);
+    requestTrack(
+      (trackIndexRef.current - 1 + engineTracks.length) % engineTracks.length,
+    );
   }, [requestTrack]);
 
   const setVolume = useCallback((value: number) => {
@@ -289,15 +294,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     playerRef.current?.setVolume(Math.round(volume * 100));
   }, [volume]);
-
-  // Raccourci clavier : Échap ferme l'overlay LISTEN.
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   const value = useMemo<PlayerApi>(
     () => ({
@@ -356,10 +352,19 @@ export function usePlayer(): PlayerApi {
 
 /* ------------------------------------------------------------- visualizer */
 
-function Visualizer({ bars = 28, className = "" }: { bars?: number; className?: string }) {
+function Visualizer({
+  bars = 28,
+  className = "",
+}: {
+  bars?: number;
+  className?: string;
+}) {
   const { playing } = usePlayer();
   return (
-    <span className={`flex h-full items-end gap-[3px] ${className}`} aria-hidden="true">
+    <span
+      className={`flex h-full items-end gap-[3px] ${className}`}
+      aria-hidden="true"
+    >
       {Array.from({ length: bars }).map((_, index) => (
         <span
           key={index}
@@ -387,66 +392,75 @@ export function ListenButton({
 }) {
   const { playing, toggle } = usePlayer();
   return (
-    <div className="flex items-stretch">
-      <button
-        type="button"
-        onClick={toggle}
-        aria-pressed={playing}
-        aria-label={playing ? "Mettre en pause" : "Écouter"}
-        className={`group flex items-center gap-2 border border-bone/25 px-4 py-2 eyebrow transition-colors duration-300 hover:border-gold hover:text-gold ${className}`}
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={playing}
+      aria-label={playing ? "Mettre en pause" : "Écouter"}
+      className={`listen-button ${className}`}
+    >
+      <span
+        className="flex h-3 items-end gap-[2px] text-gold"
+        aria-hidden="true"
       >
-        <span className="flex h-3 items-end gap-[2px] text-gold">
-          <span
-            className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
-            style={{ height: "35%" }}
-          />
-          <span
-            className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
-            style={{ height: "100%", animationDelay: ".12s" }}
-          />
-          <span
-            className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
-            style={{ height: "55%", animationDelay: ".24s" }}
-          />
-        </span>
-        {playing ? "PAUSE" : label}
-      </button>
-    </div>
+        <span
+          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          style={{ height: "35%" }}
+        />
+        <span
+          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          style={{ height: "100%", animationDelay: ".12s" }}
+        />
+        <span
+          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          style={{ height: "55%", animationDelay: ".24s" }}
+        />
+      </span>
+      {playing ? "PAUSE" : label}
+    </button>
   );
 }
 
 export function PlayerDock() {
-  const { playing, track, position, duration, volume, toggle, next, prev, setVolume, setOpen, setTrackIndex } =
-    usePlayer();
+  const {
+    playing,
+    track,
+    position,
+    duration,
+    volume,
+    toggle,
+    next,
+    prev,
+    setVolume,
+    setOpen,
+  } = usePlayer();
   const total = duration > 0 ? duration : track.durationSec;
   const progress = Math.min(100, (position / total) * 100);
 
   return (
     <>
       <div
-        className="fixed inset-x-0 bottom-0 z-[85] border-t border-bone/15 bg-ink/95 backdrop-blur-md"
+        className="player-dock fixed inset-x-0 bottom-0 z-[85]"
         data-engine-owner="true"
       >
         <div
-          className="h-[2px] w-full bg-bone/10"
+          className="player-dock__progress"
           role="progressbar"
-          aria-label="Progression"
+          aria-label="Progression du titre"
+          aria-valuemin={0}
+          aria-valuemax={100}
           aria-valuenow={Math.round(progress)}
         >
           <div
-            className="h-full bg-gold transition-[width] duration-200 ease-linear"
-            style={{
-              width: `${progress}%`,
-              backgroundColor: track.accent,
-              boxShadow: `0 0 12px ${track.accent}`,
-            }}
+            className="player-dock__progress-fill"
+            style={{ width: `${progress}%`, backgroundColor: track.accent }}
           />
         </div>
-        <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-3 py-2 sm:gap-5 sm:px-6 sm:py-3">
+        <div className="player-dock__inner">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="group relative h-11 w-11 shrink-0 overflow-hidden border border-bone/20 transition-colors hover:border-gold sm:h-12 sm:w-12"
+            className="player-dock__cover group"
             aria-label="Ouvrir le mode LISTEN"
           >
             <Image
@@ -454,46 +468,64 @@ export function PlayerDock() {
               alt={`Visuel — ${track.project}`}
               fill
               sizes="48px"
-              className="object-cover duotone transition-[filter] duration-700 group-hover:grayscale-0"
+              className="object-cover duotone transition-[filter,transform] duration-500 group-hover:scale-105 group-hover:grayscale-0"
             />
           </button>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[11px] font-semibold uppercase tracking-[0.18em] sm:text-xs">
+            <p className="truncate text-[0.66rem] font-semibold uppercase tracking-[0.15em] text-bone sm:text-xs">
               {track.title}
             </p>
-            <p className="truncate text-[10px] uppercase tracking-[0.22em] text-bone/45 sm:text-[11px]">
+            <p className="truncate text-[0.58rem] uppercase tracking-[0.16em] text-bone/45 sm:text-[0.64rem]">
               {track.project} {playing ? "· en lecture" : ""}
             </p>
           </div>
 
-          <div className="hidden items-center gap-2 text-bone/60 lg:flex">
+          <div className="hidden h-7 items-center gap-2 text-bone/55 lg:flex">
             <Visualizer bars={22} />
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5">
             <button
               type="button"
               onClick={prev}
-              className="px-1 text-bone/50 transition-colors hover:text-bone"
+              className="player-dock__skip"
               aria-label="Mouvement précédent"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
                 <path d="M6 5h2v14H6zm12 0v14l-9-7z" />
               </svg>
             </button>
             <button
               type="button"
               onClick={toggle}
-              className="flex h-9 w-9 items-center justify-center border border-bone/25 transition-colors hover:border-gold hover:text-gold sm:h-10 sm:w-10"
+              className="player-dock__toggle"
               aria-label={playing ? "Mettre en pause" : "Écouter"}
             >
               {playing ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
                   <path d="M7 5h3v14H7zm7 0h3v14h-3z" />
                 </svg>
               ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
                   <path d="M8 5l12 7-12 7z" />
                 </svg>
               )}
@@ -501,17 +533,25 @@ export function PlayerDock() {
             <button
               type="button"
               onClick={next}
-              className="px-1 text-bone/50 transition-colors hover:text-bone"
+              className="player-dock__skip"
               aria-label="Mouvement suivant"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
                 <path d="M16 5h2v14h-2zM6 5l9 7-9 7z" />
               </svg>
             </button>
           </div>
 
           <div className="hidden items-center gap-2 md:flex">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-bone/40">Vol</span>
+            <span className="text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-bone/40">
+              Vol.
+            </span>
             <input
               type="range"
               min={0}
@@ -523,13 +563,11 @@ export function PlayerDock() {
               aria-label="Volume"
             />
           </div>
-
-          <span className="hidden text-[11px] tabular-nums text-bone/50 sm:inline">
+          <span className="hidden text-[0.66rem] tabular-nums text-bone/50 sm:inline">
             {fmt(position)} / {fmt(total)}
           </span>
         </div>
       </div>
-
       <ListenOverlay />
     </>
   );
@@ -549,136 +587,206 @@ function ListenOverlay() {
     trackIndex,
     setTrackIndex,
   } = usePlayer();
+  const reducedMotion = useReducedMotion() ?? false;
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+  const close = useCallback(() => setOpen(false), [setOpen]);
+
+  useFocusTrap({
+    active: open,
+    containerRef: overlayRef,
+    initialFocusRef: closeRef,
+    onEscape: close,
+  });
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-[90] flex flex-col bg-ink grain" role="dialog" aria-modal="true">
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{ backgroundColor: track.accent }}
-        aria-hidden="true"
-      />
-      <div className="relative flex items-center justify-between border-b border-bone/15 px-5 py-4">
-        <p className="eyebrow text-bone/60">{track.project} · Lecteur intégré</p>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="border border-bone/25 px-3 py-2 eyebrow transition-colors hover:border-gold hover:text-gold"
+    <AnimatePresence>
+      {open ? (
+        <motion.div
+          ref={overlayRef}
+          className="listen-overlay fixed inset-0 z-[105] flex flex-col overflow-y-auto bg-ink grain"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="listen-overlay-title"
+          tabIndex={-1}
+          initial={reducedMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={
+            reducedMotion
+              ? { duration: 0 }
+              : { duration: 0.2, ease: motionEase }
+          }
         >
-          Fermer ✕
-        </button>
-      </div>
-
-      <div className="relative mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-center gap-8 overflow-y-auto px-5 py-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:px-10">
-        <div className="relative aspect-square w-full max-w-md overflow-hidden border border-bone/15">
-          <Image
-            src={covers[track.id] ?? "/images/MODE-AVION.jpg"}
-            alt={`Visuel — ${track.project}`}
-            fill
-            sizes="(max-width: 1024px) 90vw, 40vw"
-            className={`object-cover duotone ${playing ? "kenburns" : ""}`}
-            priority
+          <div
+            className="listen-overlay__accent"
+            style={{ backgroundColor: track.accent }}
+            aria-hidden="true"
           />
-          <div className="absolute inset-x-0 bottom-0 flex h-24 items-end px-5 pb-5 text-bone mix-blend-difference">
-            <Visualizer bars={40} />
-          </div>
-        </div>
-
-        <div>
-          <p className="eyebrow text-gold">Mouvement {trackIndex + 1} / {engineTracks.length}</p>
-          <h2 className="display-xl mt-4 text-[13vw] leading-[0.82] sm:text-6xl lg:text-7xl">
-            {track.title}
-          </h2>
-          <p className="mt-5 max-w-lg text-sm leading-relaxed text-bone/70">
-            Chaque mouvement se lance en audio, ici-même dans le lecteur intégré du site — du clip
-            aux live expériences. La musique continue quand on change de page.
-          </p>
-
-          <div className="mt-7 flex items-center gap-3">
+          <div className="dialog-topline relative shrink-0 px-5 sm:px-8">
+            <p className="eyebrow text-bone/60">
+              {track.project} · Lecteur intégré
+            </p>
             <button
+              ref={closeRef}
               type="button"
-              onClick={prev}
-              className="border border-bone/25 px-4 py-3 eyebrow hover:border-gold"
+              onClick={close}
+              className="icon-control h-8 min-h-8 min-w-8"
+              aria-label="Fermer le mode LISTEN"
             >
-              ←
+              ×
             </button>
-            <button
-              type="button"
-              onClick={toggle}
-              className="flex items-center gap-3 bg-bone px-7 py-4 text-ink eyebrow transition-colors hover:bg-gold"
-            >
-              {playing ? "❚❚  Mettre en pause" : "▶  Écouter"}
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="border border-bone/25 px-4 py-3 eyebrow hover:border-gold"
-            >
-              →
-            </button>
-            <span className="ml-2 text-xs tabular-nums text-bone/50">
-              {fmt(position)} / {fmt(duration > 0 ? duration : track.durationSec)}
-            </span>
           </div>
 
-          <div className="mt-10 hairline pt-6">
-            <p className="eyebrow text-bone/40">Écouter les titres officiels</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {[
-                { label: "Spotify", href: "https://open.spotify.com/artist/4vibJGQKsr8i8A5a1LizZ0" },
-                {
-                  label: "Apple Music",
-                  href: "https://music.apple.com/fr/artist/conex-et-don/1668784419",
-                },
-                { label: "Audiomack", href: "https://audiomack.com/conexetdonofficiel" },
-                { label: "YouTube", href: "https://www.youtube.com/watch?v=" + track.youtubeId },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="border border-bone/20 px-4 py-2 text-[11px] uppercase tracking-[0.18em] transition-colors hover:border-gold hover:text-gold"
-                >
-                  {link.label}
-                </a>
-              ))}
+          <motion.div
+            className="relative mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-center gap-9 px-5 py-8 sm:px-8 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:px-10"
+            initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+            transition={reducedMotion ? { duration: 0 } : motionSpring}
+          >
+            <div className="listen-cover panel relative aspect-square w-full max-w-md overflow-hidden">
+              <Image
+                src={covers[track.id] ?? "/images/MODE-AVION.jpg"}
+                alt={`Visuel — ${track.project}`}
+                fill
+                sizes="(max-width: 1024px) 90vw, 40vw"
+                className={`object-cover duotone ${playing ? "kenburns" : ""}`}
+                priority
+              />
+              <div className="absolute inset-x-0 bottom-0 flex h-24 items-end px-5 pb-5 text-bone mix-blend-difference">
+                <Visualizer bars={40} />
+              </div>
             </div>
-          </div>
 
-          <div className="mt-8">
-            <p className="eyebrow text-bone/40">Mouvements</p>
-            <ul className="mt-3 divide-y divide-bone/10">
-              {engineTracks.map((item, index) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => setTrackIndex(index)}
-                    className={`flex w-full items-baseline justify-between gap-4 py-3 text-left transition-colors ${
-                      index === trackIndex ? "text-gold" : "text-bone/70 hover:text-bone"
-                    }`}
-                  >
-                    <span className="text-sm uppercase tracking-[0.12em]">
-                      {String(index + 1).padStart(2, "0")} — {item.title}
-                    </span>
-                    <span className="text-[11px] tabular-nums text-bone/40">
-                      {fmt(item.durationSec)}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="pb-12 sm:pb-16">
+              <p className="eyebrow text-gold">
+                Mouvement {trackIndex + 1} / {engineTracks.length}
+              </p>
+              <h2
+                id="listen-overlay-title"
+                className="display-xl mt-4 text-[13vw] leading-[0.82] sm:text-6xl lg:text-7xl"
+              >
+                {track.title}
+              </h2>
+              <p className="mt-5 max-w-lg text-sm leading-relaxed text-bone/70">
+                Chaque mouvement se lance ici-même dans le lecteur intégré — du
+                clip aux live expériences. La musique continue quand on change
+                de page.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={prev}
+                  className="icon-control"
+                  aria-label="Mouvement précédent"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={toggle}
+                  className="button button--solid button--inline"
+                >
+                  <span className="button__label">
+                    {playing ? "Mettre en pause" : "Écouter"}
+                  </span>
+                  <span className="button__arrow" aria-hidden="true">
+                    {playing ? "Ⅱ" : "▶"}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  className="icon-control"
+                  aria-label="Mouvement suivant"
+                >
+                  →
+                </button>
+                <span className="ml-1 text-xs tabular-nums text-bone/50">
+                  {fmt(position)} /{" "}
+                  {fmt(duration > 0 ? duration : track.durationSec)}
+                </span>
+              </div>
+
+              <div className="mt-9 border-t border-bone/12 pt-6">
+                <p className="eyebrow text-bone/40">
+                  Écouter les titres officiels
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {[
+                    {
+                      label: "Spotify",
+                      href: "https://open.spotify.com/artist/4vibJGQKsr8i8A5a1LizZ0",
+                    },
+                    {
+                      label: "Apple Music",
+                      href: "https://music.apple.com/fr/artist/conex-et-don/1668784419",
+                    },
+                    {
+                      label: "Audiomack",
+                      href: "https://audiomack.com/conexetdonofficiel",
+                    },
+                    {
+                      label: "YouTube",
+                      href:
+                        "https://www.youtube.com/watch?v=" + track.youtubeId,
+                    },
+                  ].map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="stream-link"
+                    >
+                      {link.label}
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <p className="eyebrow text-bone/40">Mouvements</p>
+                <ul className="mt-3 divide-y divide-bone/10 border-y border-bone/10">
+                  {engineTracks.map((item, index) => {
+                    const current = index === trackIndex;
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onClick={() => setTrackIndex(index)}
+                          data-current={current ? "true" : "false"}
+                          className="listen-track data-row"
+                          aria-current={current ? "true" : undefined}
+                        >
+                          <span className="min-w-0 truncate text-sm uppercase tracking-[0.1em]">
+                            {String(index + 1).padStart(2, "0")} — {item.title}
+                          </span>
+                          <span className="shrink-0 text-[0.66rem] tabular-nums text-bone/40">
+                            {fmt(item.durationSec)}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   );
 }

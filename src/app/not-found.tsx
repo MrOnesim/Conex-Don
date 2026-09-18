@@ -1,33 +1,53 @@
 import Link from "next/link";
 
-import { ListenTrigger } from "@/components/ListenRow";
-
 export default function NotFound() {
   return (
-    <section className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-5 pt-24 sm:px-8 lg:px-12">
-      <div className="weave absolute inset-0 opacity-60" aria-hidden="true" />
-      <div className="relative mx-auto w-full max-w-[1600px]">
-        <p className="eyebrow text-clay">Erreur 404</p>
-        <h1 className="display-xl mt-5 text-[22vw] leading-[0.82] sm:text-[12rem]">
-          HÉ ?
-        </h1>
-        <p className="mt-6 max-w-lg text-[15px] leading-relaxed text-bone/70">
-          Cette page n&apos;existe pas — ou plus. Retournez à l&apos;accueil, ou lancez un titre du
-          duo pendant que vous cherchez.
-        </p>
-        <div className="mt-9 flex flex-wrap items-center gap-4">
-          <Link
-            href="/"
-            className="bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
-          >
-            Retour à l&apos;accueil
-          </Link>
-          <ListenTrigger
-            label="Écouter"
-            className="border border-bone/25 px-5 py-4"
-          />
-        </div>
+    <main className="not-found-stage">
+      <div className="not-found-stage__rail" aria-hidden="true">
+        <span>PAGE INTROUVABLE</span>
+        <span>·</span>
+        <span>REPRENDRE LE FIL</span>
       </div>
-    </section>
+      <section
+        className="not-found-stage__content"
+        aria-labelledby="not-found-title"
+      >
+        <p className="eyebrow text-gold">Erreur 404</p>
+        <p className="not-found-stage__number" aria-hidden="true">
+          404
+        </p>
+        <h1
+          id="not-found-title"
+          className="display-xl relative z-10 max-w-3xl text-[clamp(3.2rem,13vw,8rem)] leading-[0.82]"
+        >
+          ON A PERDU
+          <br />
+          LA PISTE.
+        </h1>
+        <p className="relative z-10 mt-7 max-w-lg text-base leading-relaxed text-bone/65 sm:text-lg">
+          L&apos;adresse demandée ne mène à aucune page du site. Reprenez la
+          route avec la musique, l&apos;histoire ou le prochain live.
+        </p>
+        <div className="relative z-10 mt-9 flex flex-wrap gap-3">
+          <Link href="/" className="button button--solid">
+            <span className="button__label">Retour à l&apos;accueil</span>
+            <span className="button__arrow" aria-hidden="true">
+              →
+            </span>
+          </Link>
+          <Link href="/musique" className="button button--outline">
+            <span className="button__label">Explorer la musique</span>
+            <span className="button__arrow" aria-hidden="true">
+              →
+            </span>
+          </Link>
+        </div>
+      </section>
+      <nav className="not-found-stage__links" aria-label="Pages suggérées">
+        <Link href="/histoire">Notre histoire</Link>
+        <Link href="/live">Les lives</Link>
+        <Link href="/search">Recherche</Link>
+      </nav>
+    </main>
   );
 }

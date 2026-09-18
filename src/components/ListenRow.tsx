@@ -1,5 +1,7 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { usePlayer } from "@/components/player";
 
 export function ListenTrigger({
@@ -16,31 +18,32 @@ export function ListenTrigger({
     <button
       type="button"
       onClick={() => {
-        if (playing) {
-          setOpen(true);
-        } else {
-          void play();
-        }
+        if (playing) setOpen(true);
+        else void play();
       }}
-      className={`group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] transition-opacity hover:opacity-70 ${className}`}
-      style={{ color: accent }}
+      className={`listen-trigger group ${className}`}
+      style={{ "--listen-accent": accent } as CSSProperties}
+      aria-pressed={playing}
       title={`Écouter — ${track.project}`}
     >
-      <span className="flex h-2.5 items-end gap-[2px]">
+      <span className="listen-trigger__bars" aria-hidden="true">
         <span
-          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          className={playing ? "eq-bar" : ""}
           style={{ height: playing ? "100%" : "35%" }}
         />
         <span
-          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          className={playing ? "eq-bar" : ""}
           style={{ height: playing ? "70%" : "100%", animationDelay: ".12s" }}
         />
         <span
-          className={`block w-[2px] bg-current ${playing ? "eq-bar" : ""}`}
+          className={playing ? "eq-bar" : ""}
           style={{ height: playing ? "45%" : "55%", animationDelay: ".24s" }}
         />
       </span>
-      {playing ? "En cours" : label}
+      <span>{playing ? "En cours" : label}</span>
+      <span className="listen-trigger__arrow" aria-hidden="true">
+        {playing ? "↗" : "→"}
+      </span>
     </button>
   );
 }

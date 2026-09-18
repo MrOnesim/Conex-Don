@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/EmptyState";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { PageHeader } from "@/components/ui";
 import { getNews } from "@/lib/data";
@@ -56,12 +57,12 @@ export default async function PressPage() {
         accent="#D6A83A"
       />
 
-      <section className="bg-ink">
-        <div className="mx-auto max-w-[1600px] px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
+      <section className="route-section">
+        <div className="route-frame route-frame--compact">
           {lead ? (
             <Link
               href={`/press/${lead.slug}`}
-              className="group grid grid-cols-1 gap-8 border-b border-bone/12 pb-12 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,0.5fr)] lg:gap-14"
+              className="editorial-panel editorial-row group grid grid-cols-1 gap-8 p-4 sm:p-6 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,0.5fr)] lg:gap-14"
             >
               <div className="relative aspect-16/10 w-full overflow-hidden border border-bone/15">
                 <OptimizedImage
@@ -100,53 +101,78 @@ export default async function PressPage() {
                 </span>
               </div>
             </Link>
-          ) : null}
+          ) : (
+            <EmptyState
+              eyebrow="Newsroom"
+              title="Le prochain article se prépare"
+              description="Les communiqués, sorties et coulisses seront publiés ici dès qu'ils sont disponibles."
+            />
+          )}
 
-          <ul className="mt-12 divide-y divide-bone/10">
-            {rest.map((post) => (
-              <li key={post.slug}>
-                <Link
-                  href={`/press/${post.slug}`}
-                  className="group grid grid-cols-1 gap-4 py-7 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-baseline sm:gap-8"
-                >
-                  <span
-                    className="text-[9px] font-semibold uppercase tracking-[0.2em]"
-                    style={{ color: categoryAccent[post.category] ?? "#D6A83A" }}
+          {rest.length > 0 ? (
+            <ul className="editorial-list mt-12">
+              {rest.map((post) => (
+                <li key={post.slug}>
+                  <Link
+                    href={`/press/${post.slug}`}
+                    className="editorial-row group grid grid-cols-1 gap-4 py-7 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-baseline sm:gap-8"
                   >
-                    {post.category}
-                  </span>
-                  <span>
-                    <span className="display-xl block text-2xl leading-tight transition-colors group-hover:text-gold sm:text-3xl">
-                      {post.title}
+                    <span
+                      className="text-[9px] font-semibold uppercase tracking-[0.2em]"
+                      style={{
+                        color: categoryAccent[post.category] ?? "#D6A83A",
+                      }}
+                    >
+                      {post.category}
                     </span>
-                    <span className="mt-2 block max-w-2xl text-sm leading-relaxed text-bone/60">
-                      {post.excerpt}
+                    <span>
+                      <span className="display-xl block text-2xl leading-tight transition-colors group-hover:text-gold sm:text-3xl">
+                        {post.title}
+                      </span>
+                      <span className="mt-2 block max-w-2xl text-sm leading-relaxed text-bone/60">
+                        {post.excerpt}
+                      </span>
                     </span>
-                  </span>
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
-                    {post.publishedAt}
-                    {post.source ? ` · ${post.source}` : ""}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
+                      {post.publishedAt}
+                      {post.source ? ` · ${post.source}` : ""}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           <div className="mt-14 grid grid-cols-1 gap-px border border-bone/12 bg-bone/12 sm:grid-cols-3">
             {[
-              { title: "Press kit", body: "Biographies, photos HD, discographie, fiche technique.", href: "/epk" },
-              { title: "Booking", body: "Concerts, festivals, activations, partenariats.", href: "/booking" },
-              { title: "EPK PDF", body: "Télécharger le dossier de presse complet.", href: "/api/epk" },
+              {
+                title: "Press kit",
+                body: "Biographies, photos HD, discographie, fiche technique.",
+                href: "/epk",
+              },
+              {
+                title: "Booking",
+                body: "Concerts, festivals, activations, partenariats.",
+                href: "/booking",
+              },
+              {
+                title: "EPK PDF",
+                body: "Télécharger le dossier de presse complet.",
+                href: "/api/epk",
+              },
             ].map((item) => (
-              <div key={item.title} className="bg-ink p-6">
+              <div key={item.title} className="editorial-row bg-ink p-6">
                 <p className="display-xl text-2xl">{item.title}</p>
                 <p className="mt-2 text-sm text-bone/60">{item.body}</p>
-                <Link
-                  href={item.href}
-                  className="mt-5 inline-block border-b border-bone/30 pb-1 text-[10px] uppercase tracking-[0.2em] transition-colors hover:border-gold hover:text-gold"
-                >
-                  Accéder
-                </Link>
+                {item.href.startsWith("/api/") ? (
+                  <a href={item.href} className="route-link mt-5">
+                    Accéder <span aria-hidden="true">→</span>
+                  </a>
+                ) : (
+                  <Link href={item.href} className="route-link mt-5">
+                    Accéder <span aria-hidden="true">→</span>
+                  </Link>
+                )}
               </div>
             ))}
           </div>
