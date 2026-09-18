@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 import { markHydrated, useIsHydrated } from "@/lib/use-is-hydrated";
 
@@ -45,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: setThemeDirect }}>
-      <div className="contents">{Children.toArray(children)}</div>
+      <div className="contents">{children}</div>
     </ThemeContext.Provider>
   );
 }

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import {
-  Children,
   createContext,
   useCallback,
   useContext,
@@ -338,7 +337,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
   return (
     <PlayerContext.Provider value={value}>
-      <div className="contents">{Children.toArray(children)}</div>
+      <div className="contents">{children}</div>
       <div
         ref={hostRef}
         data-youtube-host="true"
