@@ -1,0 +1,56 @@
+name: Productionchecks
+
+on:
+  push:
+    branches:
+      - main
+      - fix/production-readiness
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [lint, tests, build-and-types]
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      DATABASE_URL: ""
+      SMTP_HOST: ""
+      SMTP_USER: ""
+      SMTP_PASS: ""
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint
+        if: matrix.check == 'lint'
+        run: npm run lint
+      - name: Unit and regression tests
+        if: matrix.check == 'tests'
+        run: npm test
+      - name: Production build
+        if: matrix.check == 'build-and-types'
+        run: npm run build
+      - name: Type check including generated Next.js types
+        if: matrix.check == 'build-and-types'
+        run: npm run typecheck
