@@ -9,7 +9,8 @@ import { usePlayer } from "@/components/player";
 const years = ["2022", "2023", "2024", "2025", "2026"];
 
 export function Hero() {
-    const { play } = usePlayer();
+    const { play, playing, track } = usePlayer();
+    const live = track.title === "DESSIGUIMANZANBERA" && playing;
     const leftRef = useRef<HTMLSpanElement | null>(null);
     const ampRef = useRef<HTMLSpanElement | null>(null);
     const rightRef = useRef<HTMLSpanElement | null>(null);
@@ -163,17 +164,74 @@ export function Hero() {
                 />
 
                 <div className="relative mx-auto mt-8 max-w-[1600px] border-t border-bone/20 px-5 pb-10 sm:px-8 lg:px-12">
-                    <div className="flex flex-col gap-100 pt-100 lg:flex-row lg:items-end lg:justify-between">
-                        <div className="max-w-md">
-                            <p className="eyebrow text-bone/45">
-                                Dernière sortie — 7 mai 2026
-                            </p>
-                            <p className="display-xl mt-3 text-2xl sm:text-3xl">
-                                DESSIGUIMANZANBERA
-                            </p>
-                            <p className="mt-2 text-sm text-bone/60">
-                                Conex &amp; Don × Tony X × Fanicko — 3:09
-                            </p>
+                    <div className="flex flex-col gap-6 pt-6 lg:flex-row lg:items-end lg:justify-between">
+                        <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
+                            <button
+                                type="button"
+                                onClick={() => play(4)}
+                                className="group relative aspect-square w-28 shrink-0 sm:w-40"
+                                data-cursor="Écouter"
+                                aria-label={`Écouter DESSIGUIMANZANBERA${live ? " — en lecture" : ""}`}
+                            >
+                                <span
+                                    className="absolute inset-0 translate-x-3 translate-y-3 border border-gold/30 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:translate-y-2"
+                                    aria-hidden="true"
+                                />
+                                <span className="relative block h-full w-full animate-in fade-in zoom-in-95 -rotate-2 slide-in-from-right-4 duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
+                                    <Image
+                                        src="/images/DESSIGUIMANZANBERA.png"
+                                        alt=""
+                                        fill
+                                        sizes="160px"
+                                        className="duotone object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                                    />
+                                    <span
+                                        className="absolute inset-0 bg-ink/15 transition-colors duration-500 group-hover:bg-ink/5"
+                                        aria-hidden="true"
+                                    />
+                                    <span
+                                        className={`absolute right-2 top-2 flex h-8 w-8 items-center justify-center border transition-colors duration-500 ${
+                                            live
+                                                ? "border-gold bg-gold"
+                                                : "border-bone/40 bg-ink/80 group-hover:border-gold group-hover:bg-gold"
+                                        }`}
+                                        aria-hidden="true"
+                                    >
+                                        {live ? (
+                                            <span className="flex h-3 items-end gap-[2px]">
+                                                <span className="eq-bar block w-[2px] bg-ink" style={{ height: "60%" }} />
+                                                <span className="eq-bar block w-[2px] bg-ink" style={{ height: "100%" }} />
+                                                <span className="eq-bar block w-[2px] bg-ink" style={{ height: "40%" }} />
+                                            </span>
+                                        ) : (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                className="h-3 w-3 fill-bone transition-colors duration-500 group-hover:fill-ink"
+                                            >
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
+                                        )}
+                                    </span>
+                                </span>
+                            </button>
+
+                            <div className="min-w-0">
+                                <p className="eyebrow text-bone/45">
+                                    Dernière sortie — 7 mai 2026
+                                </p>
+                                <p className="display-xl mt-3 text-2xl sm:text-3xl">
+                                    DESSIGUIMANZANBERA
+                                </p>
+                                <p className="mt-2 text-sm text-bone/60">
+                                    Conex &amp; Don × Tony X × Fanicko — 3:09
+                                </p>
+                                {live ? (
+                                    <p className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+                                        <span className="h-1 w-1 animate-pulse rounded-full bg-gold" aria-hidden="true" />
+                                        En lecture
+                                    </p>
+                                ) : null}
+                            </div>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             <button

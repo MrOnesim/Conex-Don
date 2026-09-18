@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Children, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { AnalyticsProvider } from "@/components/Analytics";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -142,7 +142,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <>
                   <SiteHeader />
                   <main id="contenu" className="pb-20">
-                    {Children.toArray(children)}
+                    {children}
                   </main>
                   <Footer />
                   <PlayerDock />

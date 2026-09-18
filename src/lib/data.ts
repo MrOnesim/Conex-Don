@@ -82,99 +82,115 @@ export type NewsView = {
 let seedPromise: Promise<void> | null = null;
 
 async function seed(): Promise<void> {
-  const existing = await db.select({ id: releasesTable.id }).from(releasesTable).limit(1);
-  if (existing.length === 0) {
-    await db.insert(releasesTable).values(
-      releaseSeed.map((release, index) => ({
-        slug: release.slug,
-        title: release.title,
-        kind: release.kind,
-        releaseDate: release.releaseDate,
-        year: release.year,
-        trackCount: release.tracks.length,
-        duration: release.duration ?? null,
-        tagline: release.tagline,
-        description: release.description,
-        longDescription: release.longDescription ?? null,
-        coverImage: release.coverImage ?? null,
-        accent: release.accent,
-        label: release.label ?? null,
-        links: release.links as Record<string, string>,
-        featured: release.featured ?? false,
-        sortOrder: index,
-      })),
-    );
-    await db.insert(tracksTable).values(
-      releaseSeed.flatMap((release) =>
-        release.tracks.map((track) => ({
-          releaseSlug: release.slug,
-          position: track.position,
-          title: track.title,
-          featuring: track.featuring ?? null,
-          duration: track.duration ?? null,
-          note: track.note ?? null,
+  try {
+    const existing = await db.select({ id: releasesTable.id }).from(releasesTable).limit(1);
+    if (existing.length === 0) {
+      await db.insert(releasesTable).values(
+        releaseSeed.map((release, index) => ({
+          slug: release.slug,
+          title: release.title,
+          kind: release.kind,
+          releaseDate: release.releaseDate,
+          year: release.year,
+          trackCount: release.tracks.length,
+          duration: release.duration ?? null,
+          tagline: release.tagline,
+          description: release.description,
+          longDescription: release.longDescription ?? null,
+          coverImage: release.coverImage ?? null,
+          accent: release.accent,
+          label: release.label ?? null,
+          links: release.links as Record<string, string>,
+          featured: release.featured ?? false,
+          sortOrder: index,
         })),
-      ),
-    );
+      );
+      await db.insert(tracksTable).values(
+        releaseSeed.flatMap((release) =>
+          release.tracks.map((track) => ({
+            releaseSlug: release.slug,
+            position: track.position,
+            title: track.title,
+            featuring: track.featuring ?? null,
+            duration: track.duration ?? null,
+            note: track.note ?? null,
+          })),
+        ),
+      );
+    }
+
+    const existingVideos = await db.select({ id: videosTable.id }).from(videosTable).limit(1);
+    if (existingVideos.length === 0) {
+      await db.insert(videosTable).values(
+        videoSeed.map((video, index) => ({
+          slug: video.slug,
+          title: video.title,
+          category: video.category,
+          year: video.year,
+          youtubeId: video.youtubeId ?? null,
+          searchQuery: video.searchQuery,
+          image: video.image ?? null,
+          accent: video.accent,
+          description: video.description,
+          sortOrder: index,
+        })),
+      );
+    }
+  } catch {
+    /* seed errors ignored - fallbacks will be used */
   }
 
-  const existingVideos = await db.select({ id: videosTable.id }).from(videosTable).limit(1);
-  if (existingVideos.length === 0) {
-    await db.insert(videosTable).values(
-      videoSeed.map((video, index) => ({
-        slug: video.slug,
-        title: video.title,
-        category: video.category,
-        year: video.year,
-        youtubeId: video.youtubeId ?? null,
-        searchQuery: video.searchQuery,
-        image: video.image ?? null,
-        accent: video.accent,
-        description: video.description,
-        sortOrder: index,
-      })),
-    );
+  try {
+    const existingEvents = await db.select({ id: eventsTable.id }).from(eventsTable).limit(1);
+    if (existingEvents.length === 0) {
+      await db.insert(eventsTable).values(
+        eventSeed.map((event, index) => ({
+          title: event.title,
+          city: event.city,
+          country: event.country,
+          venue: event.venue,
+          eventDate: event.eventDate,
+          status: event.status,
+          note: event.note,
+          ticketUrl: event.ticketUrl ?? null,
+          image: event.image ?? null,
+          sortOrder: index,
+        })),
+      );
+    }
+  } catch {
+    /* seed errors ignored - fallbacks will be used */
   }
 
-  const existingEvents = await db.select({ id: eventsTable.id }).from(eventsTable).limit(1);
-  if (existingEvents.length === 0) {
-    await db.insert(eventsTable).values(
-      eventSeed.map((event, index) => ({
-        title: event.title,
-        city: event.city,
-        country: event.country,
-        venue: event.venue,
-        eventDate: event.eventDate,
-        status: event.status,
-        note: event.note,
-        ticketUrl: event.ticketUrl ?? null,
-        image: event.image ?? null,
-        sortOrder: index,
-      })),
-    );
+  try {
+    const existingNews = await db.select({ id: newsTable.id }).from(newsTable).limit(1);
+    if (existingNews.length === 0) {
+      await db.insert(newsTable).values(
+        newsSeed.map((post, index) => ({
+          slug: post.slug,
+          title: post.title,
+          category: post.category,
+          excerpt: post.excerpt,
+          body: post.body,
+          publishedAt: post.publishedAt,
+          source: post.source ?? null,
+          sourceUrl: post.sourceUrl ?? null,
+          image: post.image ?? null,
+          sortOrder: index,
+        })),
+      );
+    }
+  } catch {
+    /* seed errors ignored - fallbacks will be used */
   }
 
-  const existingNews = await db.select({ id: newsTable.id }).from(newsTable).limit(1);
-  if (existingNews.length === 0) {
-    await db.insert(newsTable).values(
-      newsSeed.map((post, index) => ({
-        slug: post.slug,
-        title: post.title,
-        category: post.category,
-        excerpt: post.excerpt,
-        body: post.body,
-        publishedAt: post.publishedAt,
-        source: post.source ?? null,
-        sourceUrl: post.sourceUrl ?? null,
-        image: post.image ?? null,
-        sortOrder: index,
-      })),
-    );
-  }
-
-  const existingAloba = await db.select({ id: alobaPosts.id }).from(alobaPosts).limit(1);
-  if (existingAloba.length === 0) {
-    await db.insert(alobaPosts).values(alobaSeed);
+  try {
+    const existingAloba = await db.select({ id: alobaPosts.id }).from(alobaPosts).limit(1);
+    if (existingAloba.length === 0) {
+      await db.insert(alobaPosts).values(alobaSeed);
+    }
+  } catch {
+    /* seed errors ignored - fallbacks will be used */
   }
 }
 
