@@ -9,10 +9,12 @@
   --color-clay: #9e382c;
   --color-forest: #173f32;
 
-  --font-display: "Anton", "Archivo Black", "Helvetica Neue", Impact, sans-serif;
-  --font-serif-display: "Instrument Serif", "Times New Roman", Georgia, serif;
-  --font-body: "Inter", "Manrope", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+  --font-display: var(--font-anton), "Archivo Black", "Helvetica Neue", Impact,
+    sans-serif;
+  --font-serif-display: var(--font-instrument-serif), "Times New Roman",
+    Georgia, serif;
+  --font-body: var(--font-inter), "Manrope", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }

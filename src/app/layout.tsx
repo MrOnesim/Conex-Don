@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Anton, Instrument_Serif, Inter } from "next/font/google";
 import { type ReactNode } from "react";
 
 import { AnalyticsProvider } from "@/components/Analytics";
@@ -13,8 +14,39 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { awards, site, socials, stats } from "@/content/site";
 import "./globals.css";
 
+const fontDisplay = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+  display: "swap",
+});
+
+const fontSerifDisplay = Instrument_Serif({
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+const fontBody = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  applicationName: "Conex & Don",
+  manifest: "/manifest.json",
+  icons: {
+    apple: "/icons/icon-192x192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Conex & Don",
+    statusBarStyle: "black-translucent",
+  },
   title: {
     default: "CONEX & DON — Site officiel | L'héritage en mouvement",
     template: "%s | CONEX & DON",
@@ -102,27 +134,14 @@ const musicGroupSchema = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className="dark">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="alternate" type="application/rss+xml" title="CONEX & DON — RSS" href="/rss.xml" />
-        <meta name="theme-color" content="#080808" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Conex & Don" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        
-      </head>
+    <html
+      lang="fr"
+      className={`dark ${fontDisplay.variable} ${fontSerifDisplay.variable} ${fontBody.variable}`}
+    >
       <body className="bg-ink text-bone antialiased">
         <div className="contents">
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://i.ytimg.com" />
           <link rel="preconnect" href="https://s.ytimg.com" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
-          />
           <a
             href="#contenu"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[90] focus:bg-gold focus:px-4 focus:py-2 focus:text-ink"
