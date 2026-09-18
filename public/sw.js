@@ -1,4 +1,4 @@
-const CACHE_NAME = "conex-don-v1";
+const CACHE_NAME = "conex-don-v2";
 const STATIC_ASSETS = [
   "/",
   "/histoire",
@@ -12,58 +12,63 @@ const STATIC_ASSETS = [
   "/manifest.json",
 ];
 
-const CACHE_STRATEGIES = {
-  static: "cache-first",
-  api: "network-first",
-  images: "cache-first",
-  fonts: "cache-first",
-};
-
 async function installServiceWorker() {
   const cache = await caches.open(CACHE_NAME);
   await cache.addAll(STATIC_ASSETS);
-  self.skipWaiting();
+  await self.skipWaiting();
 }
 
 async function activateServiceWorker() {
   const cacheNames = await caches.keys();
   await Promise.all(
     cacheNames
-      .filter((name) => name !== CACHE_NAME)
+      .filter((name) => name.startsWith("conex-don-") && name !== CACHE_NAME)
       .map((name) => caches.delete(name))
   );
-  self.clients.claim();
+  await self.clients.claim();
 }
 
 async function handleFetch(event) {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (url.origin !== location.origin) {
+  if (url.origin !== location.origin || request.method !== "GET") {
     return fetch(request);
   }
 
-  if (request.method !== "GET") {
-    return fetch(request);
+  // API responses may be private or time-sensitive: never persist or replay them.
+  if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
+    try {
+      return await fetch(request);
+    } catch {
+      return new Response("Offline", { status: 503 });
+    }
   }
 
-  const isApiRequest = url.pathname.startsWith("/api/");
   const isImageRequest = request.destination === "image";
   const isFontRequest = request.destination === "font";
-  const isStaticAsset = STATIC_ASSETS.some((asset) => url.pathname === asset);
-
-  if (isApiRequest) {
-    return networkFirstStrategy(request);
-  }
+  const isStaticAsset = STATIC_ASSETS.includes(url.pathname);
 
   if (isImageRequest || isFontRequest || isStaticAsset) {
-    return cacheFirstStrategy(request);
+    return cacheFirstStrategy(request, event);
   }
 
-  return networkFirstStrategy(request);
+  return networkFirstStrategy(request, event);
 }
 
-async function cacheFirstStrategy(request) {
+async function storeResponse(request, response, cache) {
+  const cacheControl = response.headers.get("Cache-Control") || "";
+  if (!response.ok || response.status === 206 || /\b(no-store|private)\b/i.test(cacheControl)) {
+    return;
+  }
+  try {
+    await cache.put(request, response);
+  } catch {
+    // Storage quota or cache failures must not break a successful network request.
+  }
+}
+
+async function cacheFirstStrategy(request, event) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
 
@@ -74,23 +79,19 @@ async function cacheFirstStrategy(request) {
 
   try {
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
-    }
+    event.waitUntil(storeResponse(request, networkResponse.clone(), cache));
     return networkResponse;
   } catch {
     return new Response("Offline", { status: 503 });
   }
 }
 
-async function networkFirstStrategy(request) {
+async function networkFirstStrategy(request, event) {
   const cache = await caches.open(CACHE_NAME);
 
   try {
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      cache.put(request, networkResponse.clone());
-    }
+    event.waitUntil(storeResponse(request, networkResponse.clone(), cache));
     return networkResponse;
   } catch {
     const cachedResponse = await cache.match(request);
@@ -104,10 +105,9 @@ async function networkFirstStrategy(request) {
 async function updateCache(request, cache) {
   try {
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      await cache.put(request, networkResponse);
-    }
+    await storeResponse(request, networkResponse, cache);
   } catch {
+    // Keep the cached public resource available while offline.
   }
 }
 
@@ -120,11 +120,13 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(handleFetch(event));
+  const response = handleFetch(event);
+  event.waitUntil(response.then(() => undefined, () => undefined));
+  event.respondWith(response);
 });
 
 self.addEventListener("message", (event) => {
   if (event.data === "skipWaiting") {
-    self.skipWaiting();
+    event.waitUntil(self.skipWaiting());
   }
 });
