@@ -17,7 +17,11 @@ export async function POST(request: NextRequest) {
 
   let payload: Payload;
   try {
-    payload = (await request.json()) as Payload;
+    const body: unknown = await request.json();
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+    }
+    payload = body as Payload;
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
