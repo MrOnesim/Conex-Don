@@ -13,7 +13,7 @@ type RevealProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  variant?: "rise" | "wipe" | "mask";
+  variant?: "rise" | "wipe" | "mask" | "fade";
   as?: ElementType;
   style?: CSSProperties;
 };
@@ -49,7 +49,7 @@ export function Reveal({
   }, []);
 
   const variantClass =
-    variant === "wipe" ? "wipe" : variant === "mask" ? "reveal-mask" : "rise";
+    variant === "wipe" ? "wipe" : variant === "mask" ? "reveal-mask" : variant === "fade" ? "reveal-fade" : "rise";
 
   return (
     <Tag

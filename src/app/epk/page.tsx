@@ -80,7 +80,7 @@ export default async function EpkPage() {
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-4 px-5 py-6 sm:px-8 lg:px-12">
           <a
             href="/api/epk"
-            className="bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
+            className="shine bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
           >
             Télécharger le press kit (PDF)
           </a>
@@ -138,7 +138,7 @@ export default async function EpkPage() {
           <p className="eyebrow text-bone/40">04 — Photos HD (usage presse, crédit obligatoire)</p>
           <ul className="mt-8 grid grid-cols-2 gap-px border border-bone/12 bg-bone/12 lg:grid-cols-4">
             {photos.map((photo) => (
-              <li key={photo.src} className="bg-ink">
+              <li key={photo.src} className="group bg-ink">
                 <div className="relative aspect-4/5 w-full overflow-hidden">
                   <OptimizedImage
                     src={photo.src}
@@ -147,7 +147,7 @@ export default async function EpkPage() {
                     accent="#D6A83A"
                     sizes="(max-width: 640px) 46vw, 24vw"
                     className="h-full w-full"
-                    imageClassName="object-cover duotone"
+                    imageClassName="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0"
                   />
                 </div>
                 <div className="p-4">
@@ -208,7 +208,7 @@ export default async function EpkPage() {
               <ul className="mt-6 space-y-5">
                 {stats.map((stat) => (
                   <li key={stat.label} className="border-l border-bone/15 pl-4">
-                    <p className="display-xl text-3xl">{stat.value}</p>
+                    <p className="display-xl text-3xl text-gold">{stat.value}</p>
                     <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-bone/45">
                       {stat.label}
                     </p>

@@ -424,7 +424,7 @@ export function PlayerDock() {
   return (
     <>
       <div
-        className="fixed inset-x-0 bottom-0 z-[85] border-t border-bone/15 bg-ink/95 backdrop-blur-md"
+        className="fixed inset-x-0 bottom-0 z-[85] border-t border-bone/15 bg-ink/78 shadow-[0_-18px_50px_-20px_rgba(0,0,0,0.85)] backdrop-blur-xl"
         data-engine-owner="true"
       >
         <div
@@ -434,7 +434,7 @@ export function PlayerDock() {
           aria-valuenow={Math.round(progress)}
         >
           <div
-            className="h-full bg-gold transition-[width] duration-200 ease-linear"
+            className="h-full transition-[width] duration-200 ease-linear"
             style={{
               width: `${progress}%`,
               backgroundColor: track.accent,
@@ -446,7 +446,7 @@ export function PlayerDock() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="group relative h-11 w-11 shrink-0 overflow-hidden border border-bone/20 transition-colors hover:border-gold sm:h-12 sm:w-12"
+            className="group relative h-11 w-11 shrink-0 overflow-hidden border border-bone/20 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.7)] transition-colors hover:border-gold sm:h-12 sm:w-12"
             aria-label="Ouvrir le mode LISTEN"
           >
             <Image
@@ -463,7 +463,18 @@ export function PlayerDock() {
               {track.title}
             </p>
             <p className="truncate text-[10px] uppercase tracking-[0.22em] text-bone/45 sm:text-[11px]">
-              {track.project} {playing ? "· en lecture" : ""}
+              {track.project}
+              {playing ? (
+                <>
+                  <span className="ml-1.5 inline-block align-middle">
+                    <span className="relative flex h-2 w-2 items-center justify-center" aria-hidden="true">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-60" />
+                      <span className="relative inline-block h-1 w-1 rounded-full bg-gold" />
+                    </span>
+                  </span>
+                  <span className="text-gold"> en lecture</span>
+                </>
+              ) : null}
             </p>
           </div>
 
@@ -485,7 +496,11 @@ export function PlayerDock() {
             <button
               type="button"
               onClick={toggle}
-              className="flex h-9 w-9 items-center justify-center border border-bone/25 transition-colors hover:border-gold hover:text-gold sm:h-10 sm:w-10"
+              className={`flex h-9 w-9 items-center justify-center border transition-all duration-300 sm:h-10 sm:w-10 ${
+                playing
+                  ? "border-gold bg-gold text-ink shadow-[0_0_18px_rgba(214,168,58,0.55)]"
+                  : "border-bone/25 text-bone hover:border-gold hover:text-gold"
+              }`}
               aria-label={playing ? "Mettre en pause" : "Écouter"}
             >
               {playing ? (

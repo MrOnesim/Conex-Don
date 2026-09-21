@@ -101,7 +101,14 @@ export function Hero() {
                     className="object-cover opacity-50 duotone kenburns"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/40 to-ink" />
+                <div className="aurora absolute inset-0 opacity-80" />
             </div>
+            <span
+                className="outline-giant pointer-events-none absolute left-1/2 top-[22%] z-0 -translate-x-1/2 select-none text-[46vw] leading-none sm:text-[34vw] lg:text-[28vw]"
+                aria-hidden="true"
+            >
+                C&D
+            </span>
 
             <div
                 ref={contentRef}
@@ -116,7 +123,7 @@ export function Hero() {
                     </span>
                     <span
                         ref={ampRef}
-                        className="mx-5 inline-block font-[Instrument_Serif] text-[clamp(2rem,9vw,3.25rem)] italic text-gold sm:mx-5 sm:text-[clamp(2.75rem,6vw,4.25rem)] lg:text-[clamp(3.5rem,5vw,5.5rem)]"
+                        className="mx-5 inline-block font-[Instrument_Serif] text-[clamp(2rem,9vw,3.25rem)] italic text-gold drop-shadow-[0_0_22px_rgba(214,168,58,0.45)] sm:mx-5 sm:text-[clamp(2.75rem,6vw,4.25rem)] lg:text-[clamp(3.5rem,5vw,5.5rem)]"
                         style={{
                             fontFamily: "var(--font-serif-display)",
                             textTransform: "none",
@@ -237,7 +244,7 @@ export function Hero() {
                             <button
                                 type="button"
                                 onClick={() => play(4)}
-                                className="group inline-flex items-center gap-3 bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink transition-colors duration-500 hover:bg-gold"
+                                className="group shine inline-flex items-center gap-3 bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-ink transition-colors duration-500 hover:bg-gold"
                             >
                                 <span className="flex h-3 items-end gap-[2px]">
                                     <span

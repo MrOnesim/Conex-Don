@@ -40,13 +40,13 @@ export function StoryTeaser() {
         </div>
 
         <Reveal variant="mask" className="relative">
-          <div className="relative flex aspect-4/5 w-full flex-col justify-between overflow-hidden border border-bone/15 bg-ink-soft grain">
+          <div className="frame-offset group relative flex aspect-4/5 w-full flex-col justify-between overflow-hidden border border-bone/15 bg-ink-soft grain">
             <Image
               src="/images/Don.jpeg"
               alt="Don — les premiers freestyles publiés sur TikTok en 2022"
               fill
               sizes="(max-width: 1024px) 90vw, 45vw"
-              className="object-cover duotone opacity-90"
+              className="object-cover duotone opacity-90 transition-all duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
             />
             <div
               className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"
@@ -88,7 +88,7 @@ export function SymphonieScore({
           <Reveal variant="mask">
             <Link
               href={`/musique/${release.slug}`}
-              className="group relative block aspect-square w-full overflow-hidden border border-bone/15"
+              className="frame-offset group relative block aspect-square w-full overflow-hidden border border-bone/15"
               data-cursor="Ouvrir"
             >
               <Image
@@ -119,11 +119,11 @@ export function SymphonieScore({
                 delay={index * 35}
                 variant="wipe"
               >
-                <div className="group flex items-center gap-4 py-3.5 sm:gap-6">
-                  <span className="w-7 shrink-0 text-[11px] tabular-nums text-bone/35">
+                <div className="group flex items-center gap-4 px-3 py-3.5 transition-colors duration-300 hover:bg-bone/[0.04] sm:gap-6 sm:-mx-3">
+                  <span className="w-7 shrink-0 text-[11px] tabular-nums text-bone/35 transition-colors duration-300 group-hover:text-gold">
                     {String(track.position).padStart(2, "0")}
                   </span>
-                  <span className="display-xl flex-1 text-xl transition-colors duration-300 group-hover:text-gold sm:text-3xl lg:text-4xl">
+                  <span className="display-xl flex-1 text-xl transition-all duration-300 group-hover:translate-x-1 group-hover:text-gold sm:text-3xl lg:text-4xl">
                     {track.title}
                   </span>
                   {track.featuring ? (
@@ -266,9 +266,9 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
               <br />
               VIVANT
             </h2>
-            <blockquote className="mt-10 max-w-xl border-l-2 border-gold pl-6">
+            <blockquote className="mt-10 max-w-xl border-l border-gold pl-6">
               <p
-                className="text-2xl leading-tight text-bone sm:text-3xl"
+                className="text-2xl leading-tight text-bone glow-text sm:text-3xl"
                 style={{ fontFamily: "var(--font-serif-display)", fontStyle: "italic" }}
               >
                 « {heritage.quote} »
@@ -303,7 +303,7 @@ export function HeritageSection({ index = "04" }: { index?: string }) {
                 style={{ top: `${104 + position * 26}px` }}
               >
                 <Reveal delay={position * 60}>
-                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] sm:gap-7 sm:p-7 animate-in fade-in slide-in-from-bottom-5 duration-200">
+                  <article className="group relative grid grid-cols-[auto_minmax(0,1fr)] gap-5 border border-bone/15 bg-ink-soft p-5 shadow-[0_-18px_48px_rgba(0,0,0,0.55)] transition-all duration-500 hover:-translate-y-1.5 hover:border-gold/35 sm:gap-7 sm:p-7 animate-in fade-in slide-in-from-bottom-5 duration-200">
                     <span
                       className="absolute inset-y-0 left-0 w-[3px]"
                       style={{
@@ -353,7 +353,7 @@ export function LatestRelease({ release }: { release: ReleaseView }) {
         <Reveal variant="mask">
           <Link
             href={`/musique/${release.slug}`}
-            className="group relative block aspect-square w-full overflow-hidden border border-bone/15"
+            className="frame-offset group relative block aspect-square w-full overflow-hidden border border-bone/15 shadow-[0_36px_90px_-30px_rgba(0,0,0,0.8)]"
             data-cursor="Ouvrir"
           >
             <Image
@@ -364,7 +364,8 @@ export function LatestRelease({ release }: { release: ReleaseView }) {
               className="object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-ink/15" />
-            <span className="absolute right-3 top-3 bg-clay px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-bone">
+            <span className="absolute right-3 top-3 flex items-center gap-2 bg-clay px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-bone shadow-[0_8px_20px_-6px_rgba(158,56,44,0.8)]">
+              <span className="h-1 w-1 animate-pulse rounded-full bg-bone" aria-hidden="true" />
               Nouvelle sortie
             </span>
           </Link>
@@ -414,7 +415,7 @@ export function DuoSection({ index = "06" }: { index?: string }) {
         <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
           {[duo.conex, duo.don].map((member, index) => (
             <Reveal key={member.name} delay={index * 120} variant="rise">
-              <article className="group flex h-full flex-col border border-bone/12">
+              <article className="corner-hover-gold group flex h-full flex-col border border-bone/12 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-28px_rgba(0,0,0,0.85)]">
                 <div className="relative aspect-4/5 w-full overflow-hidden bg-ink-soft grain">
                   {member.image ? (
                     <Image
@@ -656,14 +657,15 @@ export function BookingCta({ index = "09" }: { index?: string }) {
           <div className="flex flex-col justify-end gap-5">
             <a
               href={`mailto:${site.contact.bookingEmail}`}
-              className="block border-b border-bone/40 pb-3 text-lg text-bone"
+              className="group block border-b border-bone/40 pb-3 text-lg text-bone transition-colors hover:border-gold hover:text-gold"
               data-cursor="Écrire"
             >
               {site.contact.bookingEmail}
+              <span className="mt-1 block h-px w-0 bg-gold transition-all duration-500 group-hover:w-full" aria-hidden="true" />
             </a>
             <a
               href={`tel:${site.contact.bookingPhone.replace(/\s/g, "")}`}
-              className="block border-b border-bone/40 pb-3 text-lg text-bone"
+              className="block border-b border-bone/40 pb-3 text-lg text-bone transition-colors hover:border-gold hover:text-gold"
             >
               {site.contact.bookingPhone}
             </a>

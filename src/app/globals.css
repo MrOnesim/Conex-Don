@@ -422,6 +422,29 @@ html.light .grain::after {
   transform: none;
 }
 
+/* Révélation premium : fondu + montée + flou */
+.reveal-fade {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(8px);
+  transition:
+    opacity 1s var(--ease-out-expo),
+    transform 1s var(--ease-out-expo),
+    filter 1s var(--ease-out-expo);
+}
+.reveal-fade[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-fade {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 /* Performance: disable heavy textures for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .grain,
@@ -639,4 +662,302 @@ html.light .grain::after {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ==========================================================================
+   PREMIUM — "Héritage Numérique"
+   Profondeur, lumière dorée, finition glass, motion expo. Additif : n'altère
+   aucune classe existante.
+   ========================================================================== */
+
+/* --- Lumière ambiante globale : orbes d'or / argile / forêt + vignette ---- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(
+      58% 46% at 14% 8%,
+      color-mix(in srgb, var(--color-gold) 12%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 40% at 88% 16%,
+      color-mix(in srgb, var(--color-clay) 10%, transparent) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      60% 54% at 50% 112%,
+      color-mix(in srgb, var(--color-forest) 14%, transparent) 0%,
+      transparent 72%
+    ),
+    transparent;
+}
+
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    transparent 55%,
+    color-mix(in srgb, black 55%, transparent) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient {
+    display: none;
+  }
+}
+
+/* Rendu côté thème clair (papier) */
+html.light .ambient {
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+/* ------------------------------------------------------------------ scrims */
+.scrim-b {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-ink) 88%, transparent),
+    transparent 70%
+  );
+}
+.scrim-t {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink) 88%, transparent),
+    transparent 70%
+  );
+}
+
+/* ------------------------------------------------- panels finition glass */
+.panel {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--color-bone) 14%, transparent);
+  background: color-mix(in srgb, var(--color-ink-soft) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 40%;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-bone) 6%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+html.light .panel {
+  background: color-mix(in srgb, var(--color-bone) 82%, transparent);
+}
+
+/* Coin or signature (coin supérieur droit) */
+.corner-gold {
+  position: relative;
+}
+.corner-gold::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 2px;
+  background: var(--color-gold);
+  z-index: 1;
+}
+.corner-gold::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 14px;
+  background: var(--color-gold);
+  z-index: 1;
+}
+
+/* Any inverse : coin gold à l'état hover (cards) */
+.corner-hover-gold {
+  position: relative;
+}
+.corner-hover-gold::before,
+.corner-hover-gold::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 12px;
+  height: 2px;
+  background: transparent;
+  transition: background 0.4s var(--ease-out-expo);
+  z-index: 2;
+}
+.corner-hover-gold::after {
+  width: 2px;
+  height: 12px;
+}
+.corner-hover-gold:hover::before,
+.corner-hover-gold:hover::after {
+  background: var(--color-gold);
+}
+
+/* -------------------------------------------------------------------- glow */
+.glow-gold {
+  transition:
+    box-shadow 0.5s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo),
+    border-color 0.5s var(--ease-out-expo);
+}
+.glow-gold:hover {
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-gold) 22%, transparent),
+    0 22px 60px -18px color-mix(in srgb, var(--color-gold) 34%, transparent),
+    0 12px 34px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------------------------------------------------------------- shine sweep */
+.shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-130%) skewX(-18deg);
+  background: linear-gradient(
+    90deg,
+    transparent 20%,
+    color-mix(in srgb, var(--color-bone) 26%, transparent) 50%,
+    transparent 80%
+  );
+  transition: transform 0.9s var(--ease-out-expo);
+  z-index: 0;
+  pointer-events: none;
+}
+.shine:hover::after {
+  transform: translateX(130%) skewX(-18deg);
+}
+
+/* ------------------------------------------------------- texte signature */
+.outline-giant {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-bone) 22%, transparent);
+  user-select: none;
+}
+.outline-giant--gold {
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-gold) 55%, transparent);
+}
+
+/* Lueur textuelle dorée (titres clés) */
+.glow-text {
+  text-shadow:
+    0 0 24px color-mix(in srgb, var(--color-gold) 34%, transparent),
+    0 0 80px color-mix(in srgb, var(--color-gold) 18%, transparent);
+}
+
+/* ------------------------------------------------------------------- tilt */
+.tilt-hover {
+  transform: perspective(1100px) rotateX(0) translateZ(0);
+  transition:
+    transform 0.7s var(--ease-out-expo),
+    box-shadow 0.7s var(--ease-out-expo);
+  will-change: transform;
+}
+.tilt-hover:hover {
+  transform: perspective(1100px) rotateX(2deg) translateY(-6px);
+}
+
+/* ------------------------------------------------------- cadres offset (covers) */
+.frame-offset {
+  position: relative;
+}
+.frame-offset::before {
+  content: "";
+  position: absolute;
+  inset: 10px -10px -10px 10px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+  transition:
+    inset 0.6s var(--ease-out-expo),
+    border-color 0.6s var(--ease-out-expo);
+  pointer-events: none;
+  z-index: 0;
+}
+.frame-offset:hover::before {
+  inset: 6px -6px -6px 6px;
+  border-color: color-mix(in srgb, var(--color-gold) 60%, transparent);
+}
+
+/* ----------------------------------------------------------------- scrollbar */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-gold) 55%, var(--color-earth)),
+    var(--color-earth)
+  );
+  border-radius: 8px;
+}
+
+/* ---- lignes de rail décoratives (rail + détails éditoriaux) ------------ */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 70%, transparent),
+    transparent 78%
+  );
+}
+
+/* Métal : inline badge entouré (pour index, codes, dates) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-bone) 22%, transparent);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-bone);
+  background: color-mix(in srgb, var(--color-ink-soft) 70%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Fond d'entête dégradé offset — utilisé par PageHeader immersive */
+.aurora {
+  background:
+    radial-gradient(
+      70% 90% at 12% 0%,
+      color-mix(in srgb, var(--color-gold) 16%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      50% 80% at 92% 8%,
+      color-mix(in srgb, var(--color-clay) 14%, transparent) 0%,
+      transparent 64%
+    );
+}
+
+/* Marquee : variation rapide pour les bandeaux de trophées */
+.marquee-track--fast {
+  animation-duration: 18s;
+}
+
+/* Boîte numérotée d'index (SectionHead premium) */
+.idx {
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
