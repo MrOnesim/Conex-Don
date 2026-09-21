@@ -6,6 +6,8 @@ import { useEffect, useRef } from "react";
 
 import { usePlayer } from "@/components/player";
 
+export { default as HeroCanvas } from "./HeroCanvas";
+
 const years = ["2022", "2023", "2024", "2025", "2026"];
 
 export function Hero() {

@@ -28,7 +28,7 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
-  const Tag = (as ?? "div") as ElementType;
+  const Tag = (as ?? "div") as any;
 
   useEffect(() => {
     const node = ref.current;
@@ -79,7 +79,7 @@ export function RevealWords({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
-  const Tag = (as ?? "p") as ElementType;
+  const Tag = (as ?? "p") as any;
 
   useEffect(() => {
     const node = ref.current;
