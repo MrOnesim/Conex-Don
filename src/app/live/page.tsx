@@ -120,7 +120,7 @@ export default async function LivePage() {
             </div>
 
             <Reveal variant="mask">
-              <div className="relative aspect-4/5 w-full overflow-hidden border border-bone/15 lg:aspect-square">
+              <div className="frame-offset relative aspect-4/5 w-full overflow-hidden border border-bone/15 shadow-[0_44px_110px_-36px_rgba(0,0,0,0.9)] lg:aspect-square">
                 <OptimizedImage
                   src={hero.image ?? "/images/HÉRITAGE-VIVANT.jpg"}
                   alt={`${hero.title} — visuel live`}
@@ -132,7 +132,7 @@ export default async function LivePage() {
                 />
                 <div className="absolute inset-0 bg-ink/25" />
               </div>
-              <div className="mt-6 border border-bone/12 p-6">
+              <div className="mt-6 border border-bone/12 p-6 transition-colors duration-500 hover:border-gold/35 sm:p-8">
                 <Kicker>Billetterie</Kicker>
                 <p className="mt-3 text-sm leading-relaxed text-bone/65">
                   La billetterie n&apos;est pas encore ouverte. Inscrivez-vous à la liste ALOBA :

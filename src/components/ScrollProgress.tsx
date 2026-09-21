@@ -33,8 +33,19 @@ export function ScrollProgress() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[2px]" aria-hidden="true">
-      <div ref={ref} className="hairline-gold h-full origin-left scale-x-0" />
+    <div
+      className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[3px]"
+      aria-hidden="true"
+    >
+      <div
+        ref={ref}
+        className="h-full origin-left scale-x-0"
+        style={{
+          background:
+            "linear-gradient(90deg, #9E382C 0%, #D6A83A 40%, #F5F2EA 60%, #D6A83A 85%, #6F4A32 100%)",
+          boxShadow: "0 0 14px rgba(214,168,58,0.55)",
+        }}
+      />
     </div>
   );
 }

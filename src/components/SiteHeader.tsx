@@ -37,35 +37,41 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-[60] transition-colors duration-500 ${
+        className={`fixed inset-x-0 top-0 z-[60] transition-all duration-500 ${
           scrolled || menu
-            ? "border-b border-bone/12 bg-ink/92 backdrop-blur-md"
-            : "border-b border-transparent"
+            ? "border-b border-bone/12 bg-ink/72 shadow-[0_18px_60px_-24px_rgba(0,0,0,0.75)] backdrop-blur-xl"
+            : "border-b border-transparent bg-transparent"
         }`}
       >
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4 lg:px-12">
           <Link href="/" className="group flex items-center gap-3" aria-label="Accueil">
-            <span className="relative flex h-7 w-7 items-center justify-center bg-gold text-ink">
+            <span className="relative flex h-7 w-7 items-center justify-center bg-gold text-ink shadow-[0_0_18px_rgba(214,168,58,0.45)] transition-shadow duration-500 group-hover:shadow-[0_0_26px_rgba(214,168,58,0.7)]">
               <span className="display-xl text-sm">C&D</span>
             </span>
-            <span className="display-xl text-[15px] leading-none tracking-tight sm:text-lg">
+            <span className="display-xl text-[15px] leading-none tracking-tight transition-colors sm:text-lg">
               CONEX <span className="text-gold">&</span> DON
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 xl:flex" aria-label="Navigation principale">
-            {nav.slice(1).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                data-active={pathname === item.href ? "true" : "false"}
-                className={`link-underline text-[10px] font-medium uppercase tracking-[0.24em] transition-colors ${
-                  pathname === item.href ? "text-gold" : "text-bone/65 hover:text-bone"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="hidden items-center gap-1.5 xl:flex" aria-label="Navigation principale">
+            {nav.slice(1).map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  data-active={active ? "true" : "false"}
+                  aria-current={active ? "page" : undefined}
+                  className={`px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.24em] transition-all duration-300 ${
+                    active
+                      ? "bg-bone/10 text-gold"
+                      : "text-bone/60 hover:bg-bone/[0.06] hover:text-bone"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -103,6 +109,12 @@ export function SiteHeader() {
         aria-hidden={!menu}
       >
         <div className="weave absolute inset-0 opacity-70" aria-hidden="true" />
+        <span
+          className="outline-giant pointer-events-none absolute bottom-[10vh] right-0 select-none text-[46vw] leading-none sm:text-[38vw]"
+          aria-hidden="true"
+        >
+          C&D
+        </span>
         <nav className="relative mt-24 flex flex-1 flex-col justify-center px-5 sm:px-8">
           {nav.map((item, index) => (
             <Link

@@ -104,7 +104,7 @@ export default async function ReleasePage({ params }: PageProps) {
 
           <header className="mt-8 grid grid-cols-1 gap-10 border-b border-bone/12 pb-12 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-16">
             <Reveal variant="mask">
-              <div className="relative aspect-square w-full overflow-hidden border border-bone/15">
+              <div className="frame-offset relative aspect-square w-full overflow-hidden border border-bone/15 shadow-[0_44px_110px_-36px_rgba(0,0,0,0.9)]">
                 {release.coverImage ? (
                   <OptimizedImage
                     src={release.coverImage}
@@ -114,7 +114,7 @@ export default async function ReleasePage({ params }: PageProps) {
                     accent={release.accent}
                     sizes="(max-width: 1024px) 92vw, 42vw"
                     className="h-full w-full"
-                    imageClassName="object-cover"
+                    imageClassName="object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.04]"
                   />
                 ) : (
                   <div
@@ -202,9 +202,9 @@ export default async function ReleasePage({ params }: PageProps) {
                   <li
                     key={`${track.position}-${track.title}`}
                     id={track.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
-                    className="group flex items-center gap-4 py-4"
+                    className="group flex items-center gap-4 px-3 py-4 transition-colors duration-300 hover:bg-bone/[0.04]"
                   >
-                    <span className="w-7 text-[11px] tabular-nums text-bone/35">
+                    <span className="w-7 text-[11px] tabular-nums text-bone/35 transition-colors duration-300 group-hover:text-gold">
                       {String(track.position).padStart(2, "0")}
                     </span>
                     <span className="min-w-0 flex-1">
@@ -259,7 +259,10 @@ export default async function ReleasePage({ params }: PageProps) {
             <ul className="mt-8 grid grid-cols-2 gap-px border border-bone/12 bg-bone/12 lg:grid-cols-4">
               {others.map((item) => (
                 <li key={item.slug} className="bg-ink">
-                  <Link href={`/musique/${item.slug}`} className="group block p-5">
+                  <Link
+                    href={`/musique/${item.slug}`}
+                    className="corner-hover-gold group block p-5 transition-all duration-500 hover:bg-bone/[0.04]"
+                  >
                     <span className="text-[10px] uppercase tracking-[0.18em] text-bone/40">
                       {item.year} · {kindLabel[item.kind] ?? item.kind}
                     </span>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "conex-don-v1";
+const CACHE_NAME = "conex-don-v3";
 const STATIC_ASSETS = [
   "/",
   "/histoire",
@@ -50,13 +50,12 @@ async function handleFetch(event) {
   const isApiRequest = url.pathname.startsWith("/api/");
   const isImageRequest = request.destination === "image";
   const isFontRequest = request.destination === "font";
-  const isStaticAsset = STATIC_ASSETS.some((asset) => url.pathname === asset);
 
   if (isApiRequest) {
     return networkFirstStrategy(request);
   }
 
-  if (isImageRequest || isFontRequest || isStaticAsset) {
+  if (isImageRequest || isFontRequest) {
     return cacheFirstStrategy(request);
   }
 

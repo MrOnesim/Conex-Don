@@ -101,7 +101,7 @@ export default async function VideosPage() {
               href="https://www.youtube.com/@ConexetDon"
               target="_blank"
               rel="noreferrer"
-              className="mt-8 inline-block bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
+              className="shine group mt-8 inline-block bg-bone px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-ink transition-colors hover:bg-gold"
             >
               Ouvrir la chaîne
             </a>

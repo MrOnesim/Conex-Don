@@ -41,10 +41,10 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
               type="button"
               onClick={() => setFilter(item.key)}
               aria-pressed={active}
-              className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] transition-colors duration-300 ${
+              className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ${
                 active
-                  ? "bg-bone text-ink"
-                  : "border border-bone/20 text-bone/60 hover:border-gold hover:text-gold"
+                  ? "bg-gold text-ink shadow-[0_8px_24px_-8px_rgba(214,168,58,0.7)]"
+                  : "border border-bone/20 text-bone/60 hover:-translate-y-px hover:border-gold hover:text-gold"
               }`}
             >
               {item.label}
@@ -61,7 +61,7 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
           <li key={release.slug} className="bg-ink">
             <Link
               href={`/musique/${release.slug}`}
-              className="group flex h-full flex-col"
+              className="corner-hover-gold group flex h-full flex-col"
               data-cursor="Ouvrir"
             >
               <div className="relative aspect-square w-full overflow-hidden">
@@ -85,6 +85,18 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
                     </span>
                   </div>
                 )}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <span
+                  className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-500 group-hover:opacity-100"
+                  aria-hidden="true"
+                >
+                  <span className="flex translate-y-3 items-center gap-3 border border-gold/60 bg-ink/60 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-bone backdrop-blur-md transition-transform duration-500 group-hover:translate-y-0">
+                    Ouvrir <span className="text-gold">→</span>
+                  </span>
+                </span>
                 <span
                   className="absolute left-0 top-0 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.2em]"
                   style={{ backgroundColor: release.accent, color: "#F5F2EA" }}
@@ -98,7 +110,9 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
                   <h3 className="display-xl text-2xl leading-none transition-colors group-hover:text-gold sm:text-3xl">
                     {release.title}
                   </h3>
-                  <span className="text-[11px] tabular-nums text-bone/40">{release.year}</span>
+                  <span className="text-[11px] tabular-nums text-bone/40">
+                    <span className="text-gold/70">{release.year}</span>
+                  </span>
                 </div>
                 <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-bone/45">
                   {release.tagline}

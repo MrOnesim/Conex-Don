@@ -63,7 +63,7 @@ export default async function AlobaPage() {
                 body: "Coulisses, versions live et annonces envoyées en premier aux abonnés.",
               },
             ].map((item) => (
-              <div key={item.title} className="bg-ink p-6 sm:p-8">
+              <div key={item.title} className="corner-hover-gold bg-ink p-6 transition-all duration-500 hover:bg-bone/[0.04] sm:p-8">
                 <h3 className="display-xl text-2xl sm:text-3xl">{item.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-bone/60">{item.body}</p>
               </div>

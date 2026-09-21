@@ -37,14 +37,17 @@ export function Footer() {
         </div>
 
         <nav aria-label="Navigation pied de page">
-          <p className="eyebrow text-bone/40">Naviguer</p>
+          <p className="eyebrow flex items-center gap-3 text-bone/40">
+            <span className="rule-gold inline-block h-px w-8" aria-hidden="true" /> Naviguer
+          </p>
           <ul className="mt-4 space-y-2">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-bone/70 transition-colors hover:text-gold"
+                  className="group inline-flex items-center gap-1.5 text-sm text-bone/70 transition-colors hover:text-gold"
                 >
+                  <span className="text-gold/0 transition-all duration-300 group-hover:text-gold/[0.7]">→</span>
                   {item.label}
                 </Link>
               </li>
@@ -52,16 +55,18 @@ export function Footer() {
             <li>
               <Link
                 href="/press"
-                className="text-sm text-bone/70 transition-colors hover:text-gold"
+                className="group inline-flex items-center gap-1.5 text-sm text-bone/70 transition-colors hover:text-gold"
               >
+                <span className="text-gold/0 transition-all duration-300 group-hover:text-gold/[0.7]">→</span>
                 NEWSROOM
               </Link>
             </li>
             <li>
               <Link
                 href="/search"
-                className="text-sm text-bone/70 transition-colors hover:text-gold"
+                className="group inline-flex items-center gap-1.5 text-sm text-bone/70 transition-colors hover:text-gold"
               >
+                <span className="text-gold/0 transition-all duration-300 group-hover:text-gold/[0.7]">→</span>
                 RECHERCHE
               </Link>
             </li>
@@ -69,7 +74,9 @@ export function Footer() {
         </nav>
 
         <div>
-          <p className="eyebrow text-bone/40">Plateformes</p>
+          <p className="eyebrow flex items-center gap-3 text-bone/40">
+            <span className="rule-gold inline-block h-px w-8" aria-hidden="true" /> Plateformes
+          </p>
           <ul className="mt-4 space-y-2">
             {socials.map((social) => (
               <li key={social.label}>
@@ -77,9 +84,10 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-bone/70 transition-colors hover:text-gold"
+                  className="group inline-flex items-center gap-1.5 text-sm text-bone/70 transition-colors hover:text-gold"
                 >
-                  {social.label} <span className="text-bone/35">{social.handle}</span>
+                  <span className="text-gold/0 transition-all duration-300 group-hover:text-gold/[0.7]">→</span>
+                  {social.label} <span className="text-bone/35 group-hover:text-gold/60">{social.handle}</span>
                 </a>
               </li>
             ))}
@@ -87,7 +95,9 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="eyebrow text-bone/40">Booking &amp; management</p>
+          <p className="eyebrow flex items-center gap-3 text-bone/40">
+            <span className="rule-gold inline-block h-px w-8" aria-hidden="true" /> Booking
+          </p>
           <a
             href={`mailto:${site.contact.bookingEmail}`}
             className="mt-4 block text-sm text-gold underline decoration-gold/40 underline-offset-4"
@@ -103,11 +113,17 @@ export function Footer() {
           <p className="mt-4 text-sm text-bone/50">{site.contact.management}</p>
           <Link
             href="/booking"
-            className="mt-6 inline-block border border-bone/25 px-5 py-3 text-[10px] uppercase tracking-[0.22em] transition-colors hover:border-gold hover:text-gold"
+            className="shine mt-6 inline-block border border-bone/25 px-5 py-3 text-[10px] uppercase tracking-[0.22em] transition-colors hover:border-gold hover:text-gold"
           >
             Book Conex &amp; Don
           </Link>
         </div>
+      </div>
+
+      <div className="pointer-events-none select-none border-b border-bone/12 overflow-hidden">
+        <p className="outline-giant display-xl mx-auto max-w-[1600px] px-4 py-8 text-center text-[15vw] leading-[0.85] tracking-tight sm:px-8 lg:text-[9.5rem]">
+          HÉRITAGE <span className="outline-giant--gold">VIVANT</span>
+        </p>
       </div>
 
       <div className="border-t border-bone/12">
