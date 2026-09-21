@@ -115,10 +115,14 @@ export function Hero() {
                 className="relative mx-auto w-full max-w-[1600px] px-5 text-center sm:px-8 lg:max-w-none lg:px-12"
             >
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <h1 className="display-xl flex flex-wrap items-center justify-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,14vw,14rem)]">
 =======
 <h1 className="display-xl flex flex-wrap items-center text-[clamp(2.75rem,17vw,4.5rem)] leading-[0.78] sm:text-[clamp(4rem,12vw,6.5rem)] lg:text-[clamp(5rem,10vw,8.5rem)]">
 >>>>>>> 42c4abe (Refactor code structure for improved readability and maintainability)
+=======
+<h1 className="display-xl flex flex-wrap items-center justify-center text-[clamp(5.5rem,20vw,6rem)] leading-[0.78] sm:text-[clamp(5rem,15vw,8rem)] lg:text-[clamp(6rem,18vw,16rem)]">
+>>>>>>> b6c24f1 (taille text hero)
                     <span
                         ref={leftRef}
                         className="inline-block will-change-transform animate-in fade-in slide-in-from-bottom-5 duration-200"
