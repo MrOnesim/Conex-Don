@@ -8,6 +8,12 @@ import { CTA, Kicker, Marquee, SectionHead, Stat, StreamingLinks } from "@/compo
 import { awards, duo, heritage, site, stats, timeline } from "@/content/site";
 import type { EventView, NewsView, ReleaseView, TrackView } from "@/lib/data";
 
+const homepageAlbumImages = {
+  symphonie: "/images/SYMPHONIE-BÉNINOISE.webp",
+  modeAvion: "/images/MODE-AVION.jpg",
+  heritage: "/images/HÉRITAGE-VIVANT.jpg",
+};
+
 /* ------------------------------------------------------------------- story */
 
 export function StoryTeaser() {
@@ -73,9 +79,19 @@ export function SymphonieScore({
   tracks: TrackView[];
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-bone/10 bg-ink-soft">
-      <div className="dotgrid absolute inset-0 opacity-25" aria-hidden="true" />
-      <div className="relative mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+    <section className="relative min-h-svh overflow-hidden border-b border-bone/10 bg-ink-soft">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <Image
+          src={homepageAlbumImages.symphonie}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_35%] opacity-35 sm:object-center"
+        />
+        <div className="absolute inset-0 bg-ink/75" />
+        <div className="dotgrid absolute inset-0 opacity-25" />
+      </div>
+      <div className="relative z-10 mx-auto max-w-[1600px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
         <SectionHead
           index="02"
           label="2024 — premier album"
@@ -162,8 +178,19 @@ export function ModeAvionRail({
   tracks: TrackView[];
 }) {
   return (
-    <section className="relative border-b border-bone/10 bg-bone text-ink">
-      <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+    <section className="relative min-h-svh overflow-hidden border-b border-bone/10 bg-bone text-ink">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <Image
+          src={homepageAlbumImages.modeAvion}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_30%] opacity-25 sm:object-center"
+        />
+        <div className="absolute inset-0 bg-bone/85" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-[1600px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)]">
           <div>
             <p className="eyebrow text-clay">03 — 24 octobre 2024</p>
@@ -190,6 +217,7 @@ export function ModeAvionRail({
             </div>
           </Reveal>
         </div>
+
       </div>
 
       <div className="no-scrollbar overflow-x-auto pb-16 lg:pb-24">
@@ -245,19 +273,19 @@ const sequenceAccents = ["#D6A83A", "#9E382C", "#173F32", "#6F4A32"];
 
 export function HeritageSection({ index = "04" }: { index?: string }) {
   return (
-    <section className="relative overflow-hidden border-b border-bone/10 bg-ink">
-      <div className="absolute inset-0 -z-10">
+    <section className="relative min-h-svh overflow-hidden border-b border-bone/10 bg-ink">
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
         <Image
-          src="/images/HÉRITAGE-VIVANT.jpg"
-          alt="Public et lumières de scène pendant une live expérience de Conex & Don"
+          src={homepageAlbumImages.heritage}
+          alt=""
           fill
           sizes="100vw"
-          className="object-cover opacity-30 duotone"
+          className="object-cover object-[center_30%] opacity-40 duotone sm:object-center"
         />
-        <div className="absolute inset-0 bg-ink/70" />
+        <div className="absolute inset-0 bg-ink/70 sm:bg-ink/65" />
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
+      <div className="relative z-10 mx-auto max-w-[1600px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12 lg:py-32">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-20">
           <div>
             <Kicker color="text-gold">{index} — Live expérience 2026</Kicker>
