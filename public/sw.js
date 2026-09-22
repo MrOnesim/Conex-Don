@@ -1,4 +1,4 @@
-const CACHE_NAME = "conex-don-v3";
+const CACHE_NAME = "conex-don-v4";
 const STATIC_ASSETS = [
   "/",
   "/histoire",
