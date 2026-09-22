@@ -183,35 +183,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </ThemeProvider>
           <script
             dangerouslySetInnerHTML={{
-              __html: process.env.NODE_ENV === "production"
-                ? `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', async () => {
-                  try {
-                    const registration = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
-                    let refreshing = false;
-                    navigator.serviceWorker.addEventListener('controllerchange', () => {
-                      if (refreshing) return;
-                      refreshing = true;
-                      window.location.reload();
-                    });
-                    registration.addEventListener('updatefound', () => {
-                      const newWorker = registration.installing;
-                      if (!newWorker || !navigator.serviceWorker.controller) return;
-                      newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed') {
-                          newWorker.postMessage('skipWaiting');
-                        }
-                      });
-                    });
-                    console.log('SW registered:', registration.scope);
-                  } catch (error) {
-                    console.log('SW registration failed:', error);
-                  }
-                });
-              }
-            `
-                : `
+              __html: `
               if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then((registrations) => {
                   registrations.forEach((registration) => registration.unregister());
