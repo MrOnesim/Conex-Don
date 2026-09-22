@@ -183,7 +183,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </ThemeProvider>
           <script
             dangerouslySetInnerHTML={{
-              __html: `
+              __html: process.env.NODE_ENV === "production"
+                ? `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', async () => {
                   try {
@@ -207,6 +208,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   } catch (error) {
                     console.log('SW registration failed:', error);
                   }
+                });
+              }
+            `
+                : `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                  registrations.forEach((registration) => registration.unregister());
                 });
               }
             `,

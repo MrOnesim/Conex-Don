@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   // Aperçu live Arena : le proxy de preview est servi depuis *.e2b.app
   allowedDevOrigins: ["**.e2b.app"],
@@ -18,7 +20,9 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: isProd
+              ? "public, max-age=31536000, immutable"
+              : "no-cache, no-store, must-revalidate",
           },
         ],
       },
@@ -28,7 +32,9 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: isProd
+              ? "public, max-age=31536000, immutable"
+              : "no-cache, no-store, must-revalidate",
           },
         ],
       },

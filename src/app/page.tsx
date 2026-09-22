@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { Hero, HeroCanvas } from "@/components/Hero";
+import { Hero } from "@/components/Hero";
+import { JourneyArc } from "@/components/JourneyArc";
 import { ListenTrigger } from "@/components/ListenRow";
 import { Reveal, RevealWords } from "@/components/Reveal";
 import { ReleaseGrid } from "@/components/ReleaseGrid";
@@ -44,7 +45,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroCanvas />
+      <JourneyArc />
       <Hero />
       <MarqueeBand />
       <StoryTeaser />
