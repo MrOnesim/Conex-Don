@@ -16,4 +16,6 @@ node_modules/
 *.pem
 
 # Docker
-.dockerignore
+.dockerignoretsconfig.tsbuildinfo
+.next
+node_modules

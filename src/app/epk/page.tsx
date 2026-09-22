@@ -147,7 +147,7 @@ export default async function EpkPage() {
                     accent="#D6A83A"
                     sizes="(max-width: 640px) 46vw, 24vw"
                     className="h-full w-full"
-                    imageClassName="object-cover duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:grayscale-0"
+                    imageClassName="object-contain duotone transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0"
                   />
                 </div>
                 <div className="p-4">
