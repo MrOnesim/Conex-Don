@@ -9,7 +9,7 @@ export default function Cursor() {
       cursor.current!.style.left = `${e.pageX}px`;
       cursor.current!.style.top = `${e.pageY}px`;
 
-      // slight delay for the follower (effet de traÃ®nÃ©e)
+      // slight delay for the follower (effet de traînée)
       setTimeout(() => {
         follower.current!.style.left = `${e.pageX}px`;
         follower.current!.style.top = `${e.pageY}px`;

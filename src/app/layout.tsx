@@ -51,45 +51,45 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   title: {
-    default: "CONEX & DON â€” Site officiel | L'hÃ©ritage en mouvement",
+    default: "CONEX & DON — Site officiel | L'héritage en mouvement",
     template: "%s | CONEX & DON",
   },
   description: site.description,
   keywords: [
     "Conex et Don",
     "Conex & Don",
-    "Conex et Don BÃ©nin",
+    "Conex et Don Bénin",
     "Conex et Don musique",
     "Conex et Don Ayato",
-    "Conex et Don La Symphonie BÃ©ninoise",
+    "Conex et Don La Symphonie Béninoise",
     "Conex et Don Mode Avion",
-    "Conex et Don HÃ©ritage Vivant",
+    "Conex et Don Héritage Vivant",
     "Conex et Don DESSIGUIMANZANBERA",
-    "duo musical bÃ©ninois",
-    "afrobeat bÃ©nin",
-    "amapiano bÃ©nin",
+    "duo musical béninois",
+    "afrobeat bénin",
+    "amapiano bénin",
   ],
   authors: [{ name: "Conex & Don" }],
   openGraph: {
     type: "website",
     locale: site.locale,
     url: site.url,
-    siteName: "CONEX & DON â€” Site officiel",
-    title: "CONEX & DON â€” L'hÃ©ritage en mouvement",
+    siteName: "CONEX & DON — Site officiel",
+    title: "CONEX & DON — L'héritage en mouvement",
     description: site.description,
     images: [
       {
         url: "/api/og?title=CONEX%20%26%20DON&description=L%27h%C3%A9ritage%20en%20mouvement",
         width: 1200,
         height: 630,
-        alt: "Conex & Don â€” Site officiel",
+        alt: "Conex & Don — Site officiel",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@conexetdon",
-    title: "CONEX & DON â€” L'hÃ©ritage en mouvement",
+    title: "CONEX & DON — L'héritage en mouvement",
     description: site.description,
     images: ["/api/og?title=CONEX%20%26%20DON&description=L%27h%C3%A9ritage%20en%20mouvement"],
   },
@@ -112,26 +112,26 @@ const musicGroupSchema = {
   "@type": "MusicGroup",
   name: "Conex et Don",
   alternateName: ["Conex & Don", "Conexetdon"],
-  genre: ["Afrobeat", "Afropop", "Amapiano", "Rap", "Musique bÃ©ninoise"],
+  genre: ["Afrobeat", "Afropop", "Amapiano", "Rap", "Musique béninoise"],
   description: site.description,
-  foundingLocation: { "@type": "Place", name: "BÃ©nin" },
+  foundingLocation: { "@type": "Place", name: "Bénin" },
   foundingDate: "2022",
   member: [
     {
       "@type": "Person",
-      name: "Houngbedji Constant ExhaucÃ©",
+      name: "Houngbedji Constant Exhaucé",
       alternateName: "Conex",
-      birthPlace: { "@type": "Place", name: "Ouidah, BÃ©nin" },
+      birthPlace: { "@type": "Place", name: "Ouidah, Bénin" },
     },
     {
       "@type": "Person",
-      name: "Acakpo DieudonnÃ©",
+      name: "Acakpo Dieudonné",
       alternateName: "Don",
-      birthPlace: { "@type": "Place", name: "AvÃ©dji, BÃ©nin" },
+      birthPlace: { "@type": "Place", name: "Avédji, Bénin" },
     },
   ],
   sameAs: socials.map((social, index) => `${social.href}`),
-  award: awards.map((award, index) => `${award.title} ${award.year} â€” ${award.detail}`),
+  award: awards.map((award, index) => `${award.title} ${award.year} — ${award.detail}`),
   subjectOf: { "@type": "WebSite", name: site.name, url: site.url },
 };
 
@@ -175,7 +175,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </>
               </PlayerProvider>
               <span className="sr-only" aria-hidden="true">
-                {stats.map((stat, index) => `${stat.value} ${stat.label}`).join(" â€” ")}
+                {stats.map((stat, index) => `${stat.value} ${stat.label}`).join(" — ")}
               </span>
               <AnalyticsProvider />
               <CookieConsent />
@@ -185,28 +185,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             dangerouslySetInnerHTML={{
               __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', async () => {
-                  try {
-                    const registration = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
-                    let refreshing = false;
-                    navigator.serviceWorker.addEventListener('controllerchange', () => {
-                      if (refreshing) return;
-                      refreshing = true;
-                      window.location.reload();
-                    });
-                    registration.addEventListener('updatefound', () => {
-                      const newWorker = registration.installing;
-                      if (!newWorker || !navigator.serviceWorker.controller) return;
-                      newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed') {
-                          newWorker.postMessage('skipWaiting');
-                        }
-                      });
-                    });
-                    console.log('SW registered:', registration.scope);
-                  } catch (error) {
-                    console.log('SW registration failed:', error);
-                  }
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                  registrations.forEach((registration) => registration.unregister());
                 });
               }
             `,
