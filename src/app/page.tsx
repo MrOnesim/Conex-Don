@@ -67,7 +67,7 @@ export default async function HomePage() {
             index="06"
             label="Discographie"
             title="Musique"
-            intro="Albums, EP, singles et projets live. Chaque sortie possÃ¨de sa fiche complÃ¨te : tracklist, crÃ©dits, liens de streaming."
+            intro="Albums, EP, singles et projets live. Chaque sortie possède sa fiche complète : tracklist, crédits, liens de streaming."
           />
           <div className="mt-12">
             <ReleaseGrid releases={releases} />
@@ -79,7 +79,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <SectionHead
             index="07"
-            label="VidÃ©ographie"
+            label="Vidéographie"
             title="Clips"
             intro="Clips officiels, visualizers et captations live. Cliquez pour ouvrir le lecteur."
           />
@@ -88,7 +88,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-10">
             <CTA href="/videos" tone="outline">
-              Toute la vidÃ©ographie
+              Toute la vidéographie
             </CTA>
           </div>
         </div>
@@ -102,12 +102,12 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)] lg:gap-16">
             <div>
-              <Kicker color="text-gold">09 â€” La communautÃ©</Kicker>
+              <Kicker color="text-gold">09 — La communauté</Kicker>
               <h2 className="type-photo display-xl mt-6 text-[clamp(3rem,16vw,4.5rem)] leading-[0.82] sm:text-[clamp(4rem,10vw,5.5rem)] lg:text-[clamp(4.5rem,8vw,7rem)]">
                 ALOBA
               </h2>
               <RevealWords
-                text="Ceux qui Ã©coutent depuis les freestyles de 2022."
+                text="Ceux qui écoutent depuis les freestyles de 2022."
                 className="mt-7 max-w-lg text-lg text-bone/75"
               />
               <div className="mt-8 flex flex-wrap gap-3">
@@ -115,7 +115,7 @@ export default async function HomePage() {
                   Entrer dans ALOBA
                 </CTA>
                 <ListenTrigger
-                  label="Ã‰couter"
+                  label="Écouter"
                   className="border border-bone/25 px-5 py-3"
                 />
               </div>
@@ -125,15 +125,15 @@ export default async function HomePage() {
                 {[
                   {
                     title: "Le mur des fans",
-                    body: "Photos, vidÃ©os, messages et hashtags de la communautÃ©, publiÃ©s depuis le site.",
+                    body: "Photos, vidéos, messages et hashtags de la communauté, publiés depuis le site.",
                   },
                   {
-                    title: "Les Ã©vÃ©nements",
-                    body: "Concours, rassemblements et avant-premiÃ¨res rÃ©servÃ©s Ã  la liste ALOBA.",
+                    title: "Les événements",
+                    body: "Concours, rassemblements et avant-premières réservés à la liste ALOBA.",
                   },
                   {
                     title: "Les contenus exclusifs",
-                    body: "Coulisses, versions live et annonces envoyÃ©es en premier aux abonnÃ©s.",
+                    body: "Coulisses, versions live et annonces envoyées en premier aux abonnés.",
                   },
                 ].map((item) => (
                   <li key={item.title} className="py-5">
