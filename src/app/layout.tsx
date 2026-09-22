@@ -185,9 +185,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             dangerouslySetInnerHTML={{
               __html: `
               if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then((registrations) => {
-                  registrations.forEach((registration) => registration.unregister());
-                });
+                if (navigator.serviceWorker.controller) {
+                  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+                } else {
+                  navigator.serviceWorker.getRegistration().then((registration) => {
+                    if (registration) registration.unregister();
+                  });
+                }
               }
             `,
             }}
