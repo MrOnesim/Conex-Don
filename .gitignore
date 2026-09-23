@@ -19,3 +19,4 @@ node_modules/
 .dockerignoretsconfig.tsbuildinfo
 .next
 node_modules
+tsconfig.tsbuildinfo
