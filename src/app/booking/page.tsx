@@ -37,7 +37,6 @@ export default function BookingPage() {
               <a
                 href={`mailto:${site.contact.bookingEmail}`}
                 className="mt-4 block break-all text-lg text-gold"
-                data-cursor="Écrire"
               >
                 {site.contact.bookingEmail}
               </a>

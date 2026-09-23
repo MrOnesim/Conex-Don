@@ -105,7 +105,6 @@ export function SymphonieScore({
             <Link
               href={`/musique/${release.slug}`}
               className="frame-offset group relative block aspect-square w-full overflow-hidden border border-bone/15"
-              data-cursor="Ouvrir"
             >
               <Image
                 src={release.coverImage ?? "/images/SYMPHONIE-BÉNINOISE.webp"}
@@ -165,7 +164,7 @@ const modeAvionArt: Record<string, string> = {
   "TOR TOR": "/images/TOR-TOR.jpeg",
   PAUSE: "/images/PAUSE.png",
   VAMIDJO: "/images/VAMIDJO.png",
-  "COCA COLA": "/images/MODE-AVION.jpg",
+  "COCA COLA": "/images/coca.png",
   "DI TOLOLO": "/images/Di-TOLOLO.png",
   "WOTTO WOTTO": "/images/WOTO-WOTO.png",
 };
@@ -226,7 +225,6 @@ export function ModeAvionRail({
             <div
               key={track.title}
               className="group relative flex w-[74vw] shrink-0 flex-col justify-between overflow-hidden border-l border-ink/15 px-5 py-8 transition-colors duration-500 hover:bg-ink hover:text-bone sm:w-[38vw] lg:w-[24vw]"
-              data-cursor="On écoute ?"
             >
               <div
                 className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-25"
@@ -382,7 +380,6 @@ export function LatestRelease({ release }: { release: ReleaseView }) {
           <Link
             href={`/musique/${release.slug}`}
             className="frame-offset group relative block aspect-square w-full overflow-hidden border border-bone/15 shadow-[0_36px_90px_-30px_rgba(0,0,0,0.8)]"
-            data-cursor="Ouvrir"
           >
             <Image
               src={release.coverImage ?? "/images/DESSIGUIMANZANBERA.jpg"}
@@ -686,7 +683,6 @@ export function BookingCta({ index = "09" }: { index?: string }) {
             <a
               href={`mailto:${site.contact.bookingEmail}`}
               className="group block border-b border-bone/40 pb-3 text-lg text-bone transition-colors hover:border-gold hover:text-gold"
-              data-cursor="Écrire"
             >
               {site.contact.bookingEmail}
               <span className="mt-1 block h-px w-0 bg-gold transition-all duration-500 group-hover:w-full" aria-hidden="true" />

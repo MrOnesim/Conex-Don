@@ -2,12 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Anton, Instrument_Serif, Inter } from "next/font/google";
 import { type ReactNode } from "react";
 import { AnimatePresence } from 'framer-motion';
-import Cursor from '@/components/Cursor';
 import { AmbientSound } from "@/components/AmbientSound";
 
 import { AnalyticsProvider } from "@/components/Analytics";
 import { CookieConsent } from "@/components/CookieConsent";
-import { CursorLabel } from "@/components/CursorLabel";
 import { Footer } from "@/components/Footer";
 import { PlayerDock, PlayerProvider } from "@/components/player";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -155,7 +153,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </a>
           <SmoothScroll />
           <ScrollProgress />
-          <CursorLabel />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(musicGroupSchema) }}
