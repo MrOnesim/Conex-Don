@@ -25,7 +25,6 @@ export function ListenTrigger({
       className={`group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:opacity-70 hover:-translate-y-px ${className}`}
       style={{ color: accent }}
       title={`Écouter — ${track.project}`}
-      data-cursor="Écouter"
     >
       {playing ? (
         <span

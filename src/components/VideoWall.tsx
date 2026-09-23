@@ -102,7 +102,6 @@ export function VideoWall({
               type="button"
               onClick={() => setActive(video)}
               className="group relative block w-full overflow-hidden text-left"
-              data-cursor="Lire"
               aria-label={`Voir ${video.title}`}
             >
               <div

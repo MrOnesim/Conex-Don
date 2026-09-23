@@ -177,7 +177,6 @@ export function Hero() {
                                 type="button"
                                 onClick={() => play(4)}
                                 className="group relative aspect-square w-28 shrink-0 sm:w-40"
-                                data-cursor="Écouter"
                                 aria-label={`Écouter DESSIGUIMANZANBERA${live ? " — en lecture" : ""}`}
                             >
                                 <span

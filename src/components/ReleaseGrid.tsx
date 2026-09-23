@@ -62,7 +62,6 @@ export function ReleaseGrid({ releases }: { releases: ReleaseView[] }) {
             <Link
               href={`/musique/${release.slug}`}
               className="corner-hover-gold group flex h-full flex-col"
-              data-cursor="Ouvrir"
             >
               <div className="relative aspect-square w-full overflow-hidden">
                 {release.coverImage ? (
